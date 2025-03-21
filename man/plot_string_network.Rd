@@ -4,7 +4,12 @@
 \alias{plot_string_network}
 \title{Plot STRING Network}
 \usage{
-plot_string_network(string_db, string_ids, file_directory, current_date)
+plot_string_network(
+  string_db,
+  string_ids,
+  file_directory,
+  current_date = format(Sys.Date(), "\%m.\%d.\%Y")
+)
 }
 \arguments{
 \item{string_db}{A STRINGdb object.}

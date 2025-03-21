@@ -4,7 +4,11 @@
 \alias{plot_heatmap}
 \title{Plot Heatmap}
 \usage{
-plot_heatmap(pubmed_search_results, file_directory, current_date)
+plot_heatmap(
+  pubmed_search_results,
+  file_directory,
+  current_date = format(Sys.Date(), "\%m.\%d.\%Y")
+)
 }
 \arguments{
 \item{pubmed_search_results}{A data frame containing raw search results with genes and terms.}

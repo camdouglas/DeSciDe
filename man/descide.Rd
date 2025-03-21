@@ -20,7 +20,7 @@ descide(
 
 \item{file_directory}{Directory for saving the output files.}
 
-\item{current_date}{Current date for file naming.}
+\item{current_date}{Current date for file naming, defaults to the system date.}
 
 \item{export_format}{Format for export, either "csv", "tsv", or "excel".}
 

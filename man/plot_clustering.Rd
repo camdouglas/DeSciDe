@@ -4,7 +4,11 @@
 \alias{plot_clustering}
 \title{Plot STRING Interactions}
 \usage{
-plot_clustering(string_results, file_directory, current_date)
+plot_clustering(
+  string_results,
+  file_directory,
+  current_date = format(Sys.Date(), "\%m.\%d.\%Y")
+)
 }
 \arguments{
 \item{string_results}{Data frame with STRING metrics.}

@@ -24,7 +24,7 @@ utils::globalVariables(c(
 #' @param current_date Current date for file naming.
 #' @param export_format Format for export, either "csv", "tsv", or "excel".
 #' @export
-combine_summary <- function(pubmed_search_results, string_results, file_directory, current_date, export_format = "csv") {
+combine_summary <- function(pubmed_search_results, string_results, file_directory, current_date = format(Sys.Date(), "%m.%d.%Y"), export_format = "csv") {
   colnames(pubmed_search_results)[1] <- "Gene"
   colnames(string_results)[1] <- "Gene"
 
@@ -61,7 +61,7 @@ combine_summary <- function(pubmed_search_results, string_results, file_director
 #' @param file_directory Directory for saving the output plot.
 #' @param current_date Current date for file naming.
 #' @export
-plot_clustering <- function(string_results, file_directory, current_date) {
+plot_clustering <- function(string_results, file_directory, current_date = format(Sys.Date(), "%m.%d.%Y")) {
   log_message <- function(message) {
     cat(paste0(Sys.time(), ": ", message, "\n"))
   }

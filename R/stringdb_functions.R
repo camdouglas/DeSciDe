@@ -92,7 +92,7 @@ search_string_db <- function(genes_list) {
 #' @param file_directory Directory for saving the output plot.
 #' @param current_date Current date for file naming.
 #' @export
-plot_string_network <- function(string_db, string_ids, file_directory, current_date) {
+plot_string_network <- function(string_db, string_ids, file_directory, current_date = format(Sys.Date(), "%m.%d.%Y")) {
   network_output_filename <- paste(current_date, "STRINGdb_Network.pdf", sep = "_")
   full_network_output_path <- file.path(file_directory, network_output_filename)
 

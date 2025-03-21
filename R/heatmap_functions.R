@@ -19,7 +19,7 @@ utils::globalVariables(c(
 #' @param file_directory Directory for saving the output plot.
 #' @param current_date Current date for file naming.
 #' @export
-plot_heatmap <- function(pubmed_search_results, file_directory, current_date) {
+plot_heatmap <- function(pubmed_search_results, file_directory, current_date = format(Sys.Date(), "%m.%d.%Y")) {
   # Format the data for the heatmap
   heatmap_data <- pubmed_search_results %>%
     select(-Total, -PubMed_Rank) %>%

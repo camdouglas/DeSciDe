@@ -8,7 +8,7 @@ combine_summary(
   pubmed_search_results,
   string_results,
   file_directory,
-  current_date,
+  current_date = format(Sys.Date(), "\%m.\%d.\%Y"),
   export_format = "csv"
 )
 }
