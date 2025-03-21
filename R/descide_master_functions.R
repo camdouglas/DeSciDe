@@ -5,12 +5,10 @@
 #' @param genes_list A list of genes.
 #' @param terms_list A list of terms.
 #' @param file_directory Directory for saving the output files.
-#' @param current_date Current date for file naming, defaults to the system date.
 #' @param export_format Format for export, either "csv", "tsv", or "excel".
 #' @param threshold_percentage Percentage threshold for ranking (default is 20%).
 #' @export
 descide <- function(genes_list, terms_list, file_directory,
-                    current_date = Sys.Date(),
                     export_format = "csv",
                     threshold_percentage = 20) {
 
@@ -20,7 +18,8 @@ descide <- function(genes_list, terms_list, file_directory,
 
   log_message("Starting analysis pipeline")
 
-  # Convert current_date into the desired format
+  # Automatically set current_date to the system date and format it
+  current_date <- Sys.Date()
   formatted_date <- format(current_date, "%m.%d.%Y")
 
   # Step 1: Perform PubMed search
@@ -32,7 +31,7 @@ descide <- function(genes_list, terms_list, file_directory,
 
   # Step 2: Plot heatmap of PubMed search results
   log_message("Plotting heatmap of PubMed search results")
-  plot_heatmap(pubmed_search_results, file_directory, formatted_date)
+  plot_heatmap(pubmed_search_results, file_directory)  # Remove formatted_date
 
   # Step 3: Perform STRING database search
   log_message("Performing STRING database search")
@@ -47,21 +46,21 @@ descide <- function(genes_list, terms_list, file_directory,
 
   # Step 4: Plot STRING network interactions
   log_message("Plotting STRING network interactions")
-  plot_string_network(string_db, string_ids, file_directory, formatted_date)
+  plot_string_network(string_db, string_ids, file_directory)  # Remove formatted_date
 
   # Step 5: Combine PubMed and STRING summaries
   log_message("Combining summaries")
-  combine_summary(pubmed_search_results, string_results, file_directory, formatted_date, export_format)
+  combine_summary(pubmed_search_results, string_results, file_directory, export_format)  # Remove formatted_date
 
   # Step 6: Plot degree vs. clustering coefficient
   log_message("Plotting clustering coefficient")
   print(paste("Data passed to plot_clustering function"))
   print(str(string_results))
-  plot_clustering(string_results, file_directory, formatted_date)
+  plot_clustering(string_results, file_directory)  # Remove formatted_date
 
   # Step 7: Categorize and plot genes
   log_message("Categorizing and plotting genes")
-  categorize_and_plot_genes(string_results, pubmed_search_results, file_directory, formatted_date, threshold_percentage)
+  categorize_and_plot_genes(string_results, pubmed_search_results, file_directory, threshold_percentage)  # Remove formatted_date
 
   log_message("FINISHED: Analysis pipeline completed")
 

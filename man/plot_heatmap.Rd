@@ -4,18 +4,12 @@
 \alias{plot_heatmap}
 \title{Plot Heatmap}
 \usage{
-plot_heatmap(
-  pubmed_search_results,
-  file_directory,
-  current_date = format(Sys.Date(), "\%m.\%d.\%Y")
-)
+plot_heatmap(pubmed_search_results, file_directory)
 }
 \arguments{
 \item{pubmed_search_results}{A data frame containing raw search results with genes and terms.}
 
 \item{file_directory}{Directory for saving the output plot.}
-
-\item{current_date}{Current date for file naming.}
 }
 \description{
 Create and save a heatmap of the PubMed search results.

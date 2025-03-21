@@ -90,12 +90,13 @@ search_string_db <- function(genes_list) {
 #' @param string_db A STRINGdb object.
 #' @param string_ids A list of STRING IDs.
 #' @param file_directory Directory for saving the output plot.
-#' @param current_date Current date for file naming.
 #' @export
-plot_string_network <- function(string_db, string_ids, file_directory, current_date = format(Sys.Date(), "%m.%d.%Y")) {
-  network_output_filename <- paste(current_date, "STRINGdb_Network.pdf", sep = "_")
-  full_network_output_path <- file.path(file_directory, network_output_filename)
+plot_string_network <- function(string_db, string_ids, file_directory) {
+  current_date <- Sys.Date()
+  formatted_date <- format(current_date, "%m.%d.%Y")
 
+  network_output_filename <- paste(formatted_date, "STRINGdb_Network.pdf", sep = "_")
+  full_network_output_path <- file.path(file_directory, network_output_filename)
   pdf(file = full_network_output_path, width = 12, height = 12)
   string_db$plot_network(string_ids)
   dev.off()
@@ -109,9 +110,11 @@ plot_string_network <- function(string_db, string_ids, file_directory, current_d
 #'
 #' @param string_results Data frame with STRING metrics.
 #' @param file_directory Directory for saving the output plot.
-#' @param current_date Current date for file naming.
 #' @export
-plot_clustering <- function(string_results, file_directory, current_date = format(Sys.Date(), "%m.%d.%Y")) {
+plot_clustering <- function(string_results, file_directory) {
+  current_date <- Sys.Date()
+  formatted_date <- format(current_date, "%m.%d.%Y")
+
   log_message <- function(message) {
     cat(paste0(Sys.time(), ": ", message, "\n"))
   }
@@ -132,7 +135,7 @@ plot_clustering <- function(string_results, file_directory, current_date = forma
   log_message(paste("After conversion - Data types of columns:"))
   print(str(string_results))
 
-  scatter_output_filename <- paste(current_date, "Degree_vs_ClusteringCoefficient.png", sep = "_")
+  scatter_output_filename <- paste(formatted_date, "Degree_vs_ClusteringCoefficient.png", sep = "_")
   full_scatter_output_path <- file.path(file_directory, scatter_output_filename)
   print(paste("Full scatter plot file path:", full_scatter_output_path))
 

@@ -4,18 +4,12 @@
 \alias{plot_clustering}
 \title{Plot STRING Interactions}
 \usage{
-plot_clustering(
-  string_results,
-  file_directory,
-  current_date = format(Sys.Date(), "\%m.\%d.\%Y")
-)
+plot_clustering(string_results, file_directory)
 }
 \arguments{
 \item{string_results}{Data frame with STRING metrics.}
 
 \item{file_directory}{Directory for saving the output plot.}
-
-\item{current_date}{Current date for file naming.}
 }
 \description{
 Plot STRING interactions degree vs. clustering.

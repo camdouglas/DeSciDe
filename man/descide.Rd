@@ -8,7 +8,6 @@ descide(
   genes_list,
   terms_list,
   file_directory,
-  current_date = Sys.Date(),
   export_format = "csv",
   threshold_percentage = 20
 )
@@ -19,8 +18,6 @@ descide(
 \item{terms_list}{A list of terms.}
 
 \item{file_directory}{Directory for saving the output files.}
-
-\item{current_date}{Current date for file naming, defaults to the system date.}
 
 \item{export_format}{Format for export, either "csv", "tsv", or "excel".}
 

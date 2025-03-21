@@ -8,7 +8,6 @@ combine_summary(
   pubmed_search_results,
   string_results,
   file_directory,
-  current_date = format(Sys.Date(), "\%m.\%d.\%Y"),
   export_format = "csv"
 )
 }
@@ -18,8 +17,6 @@ combine_summary(
 \item{string_results}{Data frame with STRING metrics.}
 
 \item{file_directory}{Directory for saving the output summary.}
-
-\item{current_date}{Current date for file naming.}
 
 \item{export_format}{Format for export, either "csv", "tsv", or "excel".}
 }

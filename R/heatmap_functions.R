@@ -17,10 +17,12 @@ utils::globalVariables(c(
 #'
 #' @param pubmed_search_results A data frame containing raw search results with genes and terms.
 #' @param file_directory Directory for saving the output plot.
-#' @param current_date Current date for file naming.
 #' @export
-plot_heatmap <- function(pubmed_search_results, file_directory, current_date = format(Sys.Date(), "%m.%d.%Y")) {
-  # Format the data for the heatmap
+plot_heatmap <- function(pubmed_search_results, file_directory) {
+  current_date <- Sys.Date()
+  formatted_date <- format(current_date, "%m.%d.%Y")
+
+  # Prepare heatmap data
   heatmap_data <- pubmed_search_results %>%
     select(-Total, -PubMed_Rank) %>%
     column_to_rownames("Gene")
@@ -31,7 +33,7 @@ plot_heatmap <- function(pubmed_search_results, file_directory, current_date = f
     colorRamp2(c(column_min[i], column_max[i]), c("white", "navy"))
   })
 
-  output_filename <- paste(current_date, "PubMed_Heatmap.png", sep = "_")
+  output_filename <- paste(formatted_date, "PubMed_Heatmap.png", sep = "_")
   full_output_path <- file.path(file_directory, output_filename)
 
   png(filename = full_output_path, width = 800, height = 1200)
