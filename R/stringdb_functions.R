@@ -102,3 +102,62 @@ plot_string_network <- function(string_db, string_ids, file_directory, current_d
 
   print(paste("Network plot exported to:", full_network_output_path))
 }
+
+#' Plot STRING Interactions
+#'
+#' Plot STRING interactions degree vs. clustering.
+#'
+#' @param string_results Data frame with STRING metrics.
+#' @param file_directory Directory for saving the output plot.
+#' @param current_date Current date for file naming.
+#' @export
+plot_clustering <- function(string_results, file_directory, current_date = format(Sys.Date(), "%m.%d.%Y")) {
+  log_message <- function(message) {
+    cat(paste0(Sys.time(), ": ", message, "\n"))
+  }
+
+  log_message("Inside plot_clustering function")
+  print(paste("Dimensions of string_results:", dim(string_results)))
+  print("First few rows of string_results:")
+  print(head(string_results))
+
+  if(!all(c("Degree", "Clustering_Coefficient_Percent") %in% colnames(string_results))) {
+    stop("Essential columns missing in string_results")
+  }
+
+  # Convert relevant columns to numeric if necessary
+  string_results$Degree <- as.numeric(string_results$Degree)
+  string_results$Clustering_Coefficient_Percent <- as.numeric(string_results$Clustering_Coefficient_Percent)
+
+  log_message(paste("After conversion - Data types of columns:"))
+  print(str(string_results))
+
+  scatter_output_filename <- paste(current_date, "Degree_vs_ClusteringCoefficient.png", sep = "_")
+  full_scatter_output_path <- file.path(file_directory, scatter_output_filename)
+  print(paste("Full scatter plot file path:", full_scatter_output_path))
+
+  plot <- ggplot(string_results, aes(x = Degree, y = Clustering_Coefficient_Percent)) +
+    geom_point(color = "black", alpha = 1) +
+    theme_minimal() +
+    labs(title = "Connectivity of Query",
+         x = "Degree (Number of Neighbors)",
+         y = "Clustering Coefficient (%)") +
+    theme(
+      plot.title = element_text(hjust = 0.5, size = 14, face = "bold"),
+      axis.title.x = element_text(size = 12),
+      axis.title.y = element_text(size = 12),
+      axis.text = element_text(size = 10),
+      panel.grid.major = element_blank(),
+      panel.grid.minor = element_blank(),
+      axis.ticks = element_line(color = "black"),
+      axis.line = element_blank(),
+      panel.border = element_rect(color = "black", fill = NA, size = 1)
+    )
+
+  # Save the plot
+  png(filename = full_scatter_output_path, width = 1000, height = 800, res = 150)
+  print(plot)  # Ensure the plot is completed before closing the graphics device
+  dev.off()
+
+  log_message("Scatter plot saved successfully")
+}
