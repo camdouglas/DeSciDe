@@ -1,0 +1,25 @@
+Package: DeSciDe
+Type: Package
+Title: DeSciDe: A tool for unbiased literature searching and gene list curation
+Version: 0.1.0
+Authors@R: 
+    person("Cameron", "Douglas", email = "camerondouglas@ufl.edu", role = c("aut", "cre"))
+Description: DeSciDe (Deciphering Scientific Discoveries) is an R package designed for genomic and proteomic data analysis, PubMed search, protein interaction network visualization, and comprehensive data summarization.
+License: GPL-3
+Encoding: UTF-8
+LazyData: true
+Imports: 
+    rentrez,
+    ComplexHeatmap,
+    circlize,
+    STRINGdb,
+    data.table,
+    igraph,
+    ggplot2,
+    openxlsx,
+    dplyr,
+    tidyr,
+    magrittr,
+    tibble
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.2
