@@ -18,10 +18,13 @@ utils::globalVariables(c(
 #' Search the STRING database for protein interactions.
 #'
 #' @param genes_list A list of genes.
+#' @param species The NCBI taxon ID of the species. Defaults to 9606 (Homo sapiens).
+#' @param network_type The type of network to use, either "functional" or "physical". Defaults to "functional".
+#' @param score_threshold The minimum score threshold for interactions. Defaults to 400.
 #' @return A list containing metrics, STRINGdb object, and STRING IDs.
 #' @export
-search_string_db <- function(genes_list) {
-  string_db <- STRINGdb$new(species = 9606, score_threshold = 400, input_directory = "")
+search_string_db <- function(genes_list, species = 9606, network_type = "functional", score_threshold = 400) {
+  string_db <- STRINGdb$new(species = species, score_threshold = score_threshold, input_directory = "", network_type = network_type)
 
   mapped_genes <- string_db$map(data.frame(gene = genes_list), "gene", takeFirst = TRUE, removeUnmappedRows = TRUE)
   unique_mapped_genes <- mapped_genes %>% group_by(gene) %>% slice(1)

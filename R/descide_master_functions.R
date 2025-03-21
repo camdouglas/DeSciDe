@@ -7,10 +7,16 @@
 #' @param file_directory Directory for saving the output files.
 #' @param export_format Format for export, either "csv", "tsv", or "excel".
 #' @param threshold_percentage Percentage threshold for ranking (default is 20%).
+#' @param species The NCBI taxon ID of the species. Defaults to 9606 (Homo sapiens).
+#' @param network_type The type of network to use, either "functional" or "physical". Defaults to "functional".
+#' @param score_threshold The minimum score threshold for interactions. Defaults to 400.
 #' @export
 descide <- function(genes_list, terms_list, file_directory,
                     export_format = "csv",
-                    threshold_percentage = 20) {
+                    threshold_percentage = 20,
+                    species = 9606,
+                    network_type = "functional",
+                    score_threshold = 400) {
 
   log_message <- function(message) {
     cat(paste0(Sys.time(), ": ", message, "\n"))
@@ -31,11 +37,11 @@ descide <- function(genes_list, terms_list, file_directory,
 
   # Step 2: Plot heatmap of PubMed search results
   log_message("Plotting heatmap of PubMed search results")
-  plot_heatmap(pubmed_search_results, file_directory)  # Remove formatted_date
+  plot_heatmap(pubmed_search_results, file_directory)
 
   # Step 3: Perform STRING database search
   log_message("Performing STRING database search")
-  string_db_results <- search_string_db(genes_list)
+  string_db_results <- search_string_db(genes_list, species, network_type, score_threshold)
 
   string_results <- string_db_results$string_results
   string_db <- string_db_results$string_db
@@ -46,21 +52,21 @@ descide <- function(genes_list, terms_list, file_directory,
 
   # Step 4: Plot STRING network interactions
   log_message("Plotting STRING network interactions")
-  plot_string_network(string_db, string_ids, file_directory)  # Remove formatted_date
+  plot_string_network(string_db, string_ids, file_directory)
 
   # Step 5: Combine PubMed and STRING summaries
   log_message("Combining summaries")
-  combine_summary(pubmed_search_results, string_results, file_directory, export_format)  # Remove formatted_date
+  combine_summary(pubmed_search_results, string_results, file_directory, export_format)
 
   # Step 6: Plot degree vs. clustering coefficient
   log_message("Plotting clustering coefficient")
   print(paste("Data passed to plot_clustering function"))
   print(str(string_results))
-  plot_clustering(string_results, file_directory)  # Remove formatted_date
+  plot_clustering(string_results, file_directory)
 
   # Step 7: Categorize and plot genes
   log_message("Categorizing and plotting genes")
-  categorize_and_plot_genes(string_results, pubmed_search_results, file_directory, threshold_percentage)  # Remove formatted_date
+  categorize_and_plot_genes(string_results, pubmed_search_results, file_directory, threshold_percentage)
 
   log_message("FINISHED: Analysis pipeline completed")
 

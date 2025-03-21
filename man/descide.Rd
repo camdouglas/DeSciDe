@@ -9,7 +9,10 @@ descide(
   terms_list,
   file_directory,
   export_format = "csv",
-  threshold_percentage = 20
+  threshold_percentage = 20,
+  species = 9606,
+  network_type = "functional",
+  score_threshold = 400
 )
 }
 \arguments{
@@ -22,6 +25,12 @@ descide(
 \item{export_format}{Format for export, either "csv", "tsv", or "excel".}
 
 \item{threshold_percentage}{Percentage threshold for ranking (default is 20\%).}
+
+\item{species}{The NCBI taxon ID of the species. Defaults to 9606 (Homo sapiens).}
+
+\item{network_type}{The type of network to use, either "functional" or "physical". Defaults to "functional".}
+
+\item{score_threshold}{The minimum score threshold for interactions. Defaults to 400.}
 }
 \description{
 Run the entire analysis pipeline including PubMed search, STRING database search, and plotting.

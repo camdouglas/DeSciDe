@@ -4,10 +4,21 @@
 \alias{search_string_db}
 \title{Search STRING Database}
 \usage{
-search_string_db(genes_list)
+search_string_db(
+  genes_list,
+  species = 9606,
+  network_type = "functional",
+  score_threshold = 400
+)
 }
 \arguments{
 \item{genes_list}{A list of genes.}
+
+\item{species}{The NCBI taxon ID of the species. Defaults to 9606 (Homo sapiens).}
+
+\item{network_type}{The type of network to use, either "functional" or "physical". Defaults to "functional".}
+
+\item{score_threshold}{The minimum score threshold for interactions. Defaults to 400.}
 }
 \value{
 A list containing metrics, STRINGdb object, and STRING IDs.
