@@ -7,26 +7,22 @@
 descide(
   genes_list,
   terms_list,
-  file_directory = NULL,
-  export_format = "csv",
-  threshold_percentage = 20,
+  rank_method = "weighted",
   species = 9606,
   network_type = "full",
   score_threshold = 400,
-  rank_method = "weighted",
-  export = FALSE
+  threshold_percentage = 20,
+  export = FALSE,
+  file_directory = NULL,
+  export_format = "csv"
 )
 }
 \arguments{
-\item{genes_list}{A list of genes.}
+\item{genes_list}{A list of gene IDs.}
 
-\item{terms_list}{A list of terms.}
+\item{terms_list}{A list of search terms.}
 
-\item{file_directory}{Directory for saving the output files. Defaults to NULL.}
-
-\item{export_format}{Format for export, either "csv", "tsv", or "excel".}
-
-\item{threshold_percentage}{Percentage threshold for ranking (default is 20\%).}
+\item{rank_method}{The method to rank pubmed results, either "weighted" or "total". Weighted ranks results based on order of terms inputed. Total ranks results on total sum of publications across all search term combinations. Defaults to "weighted".}
 
 \item{species}{The NCBI taxon ID of the species. Defaults to 9606 (Homo sapiens).}
 
@@ -34,9 +30,13 @@ descide(
 
 \item{score_threshold}{The minimum score threshold for string interactions. Defaults to 400.}
 
-\item{rank_method}{The method to rank pubmed results, either "weighted" or "total". Weighted ranks results based on order of terms inputed. Total ranks results on total sum of publications across all search term combinations. Defaults to "weighted".}
+\item{threshold_percentage}{Percentage threshold for ranking (default is 20\%).}
 
 \item{export}{Logical indicating whether to export the results. Defaults to FALSE.}
+
+\item{file_directory}{Directory for saving the output files. Defaults to NULL.}
+
+\item{export_format}{Format for export, either "csv", "tsv", or "excel".}
 }
 \value{
 A list containing the PubMed search results, STRING results, and combined summary path.

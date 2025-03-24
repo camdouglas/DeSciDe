@@ -2,8 +2,8 @@
 #'
 #' Run the entire analysis pipeline including PubMed search, STRING database search, and plotting.
 #'
-#' @param genes_list A list of genes.
-#' @param terms_list A list of terms.
+#' @param genes_list A list of gene IDs.
+#' @param terms_list A list of search terms.
 #' @param threshold_percentage Percentage threshold for ranking (default is 20%).
 #' @param species The NCBI taxon ID of the species. Defaults to 9606 (Homo sapiens).
 #' @param network_type The type of string network to use, either "full" or "physical". Defaults to "full".
@@ -15,14 +15,14 @@
 #' @return A list containing the PubMed search results, STRING results, and combined summary path.
 #' @export
 descide <- function(genes_list, terms_list,
-                    file_directory = NULL,
-                    export_format = "csv",
-                    threshold_percentage = 20,
+                    rank_method = "weighted",
                     species = 9606,
                     network_type = "full",
                     score_threshold = 400,
-                    rank_method = "weighted",
-                    export = FALSE) {
+                    threshold_percentage = 20,
+                    export = FALSE,
+                    file_directory = NULL,
+                    export_format = "csv") {
 
   log_message <- function(message) {
     cat(paste0(Sys.time(), ": ", message, "\n"))
