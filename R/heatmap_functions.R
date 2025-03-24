@@ -13,12 +13,13 @@ utils::globalVariables(c(
 
 #' Plot Heatmap
 #'
-#' Create and save a heatmap of the PubMed search results.
+#' Create and save (optional) a heatmap of the PubMed search results.
 #'
 #' @param pubmed_search_results A data frame containing raw search results with genes and terms.
 #' @param file_directory Directory for saving the output plot.
+#' @param export Logical indicating whether to export the plot. Defaults to FALSE.
 #' @export
-plot_heatmap <- function(pubmed_search_results, file_directory) {
+plot_heatmap <- function(pubmed_search_results, file_directory, export = FALSE) {
   current_date <- Sys.Date()
   formatted_date <- format(current_date, "%m.%d.%Y")
 
@@ -36,12 +37,7 @@ plot_heatmap <- function(pubmed_search_results, file_directory) {
     colorRamp2(c(column_min[i], column_max[i]), c("white", "navy"))
   })
 
-  output_filename <- paste(formatted_date, "PubMed_Heatmap.png", sep = "_")
-  full_output_path <- file.path(file_directory, output_filename)
-
-  png(filename = full_output_path, width = 800, height = 1200)
   heatmap_list <- HeatmapList()
-
   for (i in seq_len(ncol(heatmap_data))) {
     heatmap_list <- heatmap_list +
       Heatmap(heatmap_data[, i, drop = FALSE],
@@ -57,7 +53,16 @@ plot_heatmap <- function(pubmed_search_results, file_directory) {
               column_names_gp = gpar(fontface = "bold", just = "center"))
   }
 
-  draw(heatmap_list, column_title = "PubMed Search Results", column_title_gp = gpar(fontface = "bold", fontsize = 20))
-  dev.off()
-  print(paste("Heatmap plot exported to:", full_output_path))
+  if (export) {
+    output_filename <- paste(formatted_date, "PubMed_Heatmap.png", sep = "_")
+    full_output_path <- file.path(file_directory, output_filename)
+    png(filename = full_output_path, width = 800, height = 1200)
+    draw(heatmap_list, column_title = "PubMed Search Results", column_title_gp = gpar(fontface = "bold", fontsize = 20))
+    dev.off()
+    print(paste("Heatmap plot exported to:", full_output_path))
+  } else {
+    draw(heatmap_list, column_title = "PubMed Search Results", column_title_gp = gpar(fontface = "bold", fontsize = 20))
+  }
+
+  return(invisible(heatmap_list))
 }

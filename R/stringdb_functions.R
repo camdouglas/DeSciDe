@@ -93,18 +93,22 @@ search_string_db <- function(genes_list, species = 9606, network_type = "full", 
 #' @param string_db A STRINGdb object.
 #' @param string_ids A list of STRING IDs.
 #' @param file_directory Directory for saving the output plot.
+#' @param export Logical indicating whether to export the plot. Defaults to FALSE.
 #' @export
-plot_string_network <- function(string_db, string_ids, file_directory) {
+plot_string_network <- function(string_db, string_ids, file_directory, export = FALSE) {
   current_date <- Sys.Date()
   formatted_date <- format(current_date, "%m.%d.%Y")
 
-  network_output_filename <- paste(formatted_date, "STRINGdb_Network.pdf", sep = "_")
-  full_network_output_path <- file.path(file_directory, network_output_filename)
-  pdf(file = full_network_output_path, width = 12, height = 12)
-  string_db$plot_network(string_ids)
-  dev.off()
-
-  print(paste("Network plot exported to:", full_network_output_path))
+  if (export) {
+    network_output_filename <- paste(formatted_date, "STRINGdb_Network.pdf", sep = "_")
+    full_network_output_path <- file.path(file_directory, network_output_filename)
+    pdf(file = full_network_output_path, width = 12, height = 12)
+    string_db$plot_network(string_ids)
+    dev.off()
+    print(paste("Network plot exported to:", full_network_output_path))
+  } else {
+    string_db$plot_network(string_ids)
+  }
 }
 
 #' Plot STRING Interactions
@@ -113,8 +117,9 @@ plot_string_network <- function(string_db, string_ids, file_directory) {
 #'
 #' @param string_results Data frame with STRING metrics.
 #' @param file_directory Directory for saving the output plot.
+#' @param export Logical indicating whether to export the plot. Defaults to FALSE.
 #' @export
-plot_clustering <- function(string_results, file_directory) {
+plot_clustering <- function(string_results, file_directory, export = FALSE) {
   current_date <- Sys.Date()
   formatted_date <- format(current_date, "%m.%d.%Y")
 
@@ -127,6 +132,7 @@ plot_clustering <- function(string_results, file_directory) {
   print("First few rows of string_results:")
   print(head(string_results))
 
+  # Check essential columns
   if(!all(c("Degree", "Clustering_Coefficient_Percent") %in% colnames(string_results))) {
     stop("Essential columns missing in string_results")
   }
@@ -137,10 +143,6 @@ plot_clustering <- function(string_results, file_directory) {
 
   log_message("After conversion - Data types of columns:")
   print(str(string_results))
-
-  scatter_output_filename <- paste(formatted_date, "Degree_vs_ClusteringCoefficient.png", sep = "_")
-  full_scatter_output_path <- file.path(file_directory, scatter_output_filename)
-  print(paste("Full scatter plot file path:", full_scatter_output_path))
 
   plot <- ggplot(string_results, aes(x = Degree, y = Clustering_Coefficient_Percent)) +
     geom_point(color = "black", alpha = 1) +
@@ -160,10 +162,17 @@ plot_clustering <- function(string_results, file_directory) {
       panel.border = element_rect(color = "black", fill = NA, size = 1)
     )
 
-  # Save the plot
-  png(filename = full_scatter_output_path, width = 1000, height = 800, res = 150)
-  print(plot)  # Ensure the plot is completed before closing the graphics device
-  dev.off()
+  if (export) {
+    scatter_output_filename <- paste(formatted_date, "Degree_vs_ClusteringCoefficient.png", sep = "_")
+    full_scatter_output_path <- file.path(file_directory, scatter_output_filename)
+    png(filename = full_scatter_output_path, width = 1000, height = 800, res = 150)
+    print(plot)  # Ensure the plot is completed before closing the graphics device
+    dev.off()
+    print(paste("Full scatter plot file path:", full_scatter_output_path))
+    log_message("Scatter plot saved successfully")
+  } else {
+    print(plot)
+  }
 
-  log_message("Scatter plot saved successfully")
+  return(invisible(plot))
 }

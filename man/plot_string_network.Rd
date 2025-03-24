@@ -4,7 +4,7 @@
 \alias{plot_string_network}
 \title{Plot STRING Network}
 \usage{
-plot_string_network(string_db, string_ids, file_directory)
+plot_string_network(string_db, string_ids, file_directory, export = FALSE)
 }
 \arguments{
 \item{string_db}{A STRINGdb object.}
@@ -12,6 +12,8 @@ plot_string_network(string_db, string_ids, file_directory)
 \item{string_ids}{A list of STRING IDs.}
 
 \item{file_directory}{Directory for saving the output plot.}
+
+\item{export}{Logical indicating whether to export the plot. Defaults to FALSE.}
 }
 \description{
 Plot STRING network interactions using STRINGdb.

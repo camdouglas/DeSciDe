@@ -22,8 +22,10 @@ utils::globalVariables(c(
 #' @param string_results Data frame with STRING metrics.
 #' @param file_directory Directory for saving the output summary.
 #' @param export_format Format for export, either "csv", "tsv", or "excel".
+#' @param export Logical indicating whether to export the summary. Defaults to FALSE.
+#' @return A data frame with combined summary.
 #' @export
-combine_summary <- function(pubmed_search_results, string_results, file_directory, export_format = "csv") {
+combine_summary <- function(pubmed_search_results, string_results, file_directory, export_format = "csv", export = FALSE) {
   current_date <- Sys.Date()
   formatted_date <- format(current_date, "%m.%d.%Y")
 
@@ -33,26 +35,29 @@ combine_summary <- function(pubmed_search_results, string_results, file_director
   combined_summary <- pubmed_search_results %>%
     left_join(string_results, by = "Gene")
 
-  if (export_format == "csv") {
-    summary_filename <- paste(formatted_date, "Combined_Summary.csv", sep = "_")
-    full_summary_path <- file.path(file_directory, summary_filename)
-    write.csv(combined_summary, file = full_summary_path, row.names = FALSE)
-  } else if (export_format == "tsv") {
-    summary_filename <- paste(formatted_date, "Combined_Summary.tsv", sep = "_")
-    full_summary_path <- file.path(file_directory, summary_filename)
-    write.table(combined_summary, file = full_summary_path, sep = "\t", row.names = FALSE, quote = FALSE)
-  } else if (export_format == "excel") {
-    summary_filename <- paste(formatted_date, "Combined_Summary.xlsx", sep = "_")
-    full_summary_path <- file.path(file_directory, summary_filename)
-    wb <- openxlsx::createWorkbook()
-    openxlsx::addWorksheet(wb, "Summary")
-    openxlsx::writeData(wb, "Summary", combined_summary)
-    openxlsx::saveWorkbook(wb, full_summary_path, overwrite = TRUE)
-  } else {
-    stop("Invalid export format. Choose 'csv', 'tsv', or 'excel'.")
+  if (export) {
+    if (export_format == "csv") {
+      summary_filename <- paste(formatted_date, "Combined_Summary.csv", sep = "_")
+      full_summary_path <- file.path(file_directory, summary_filename)
+      write.csv(combined_summary, file = full_summary_path, row.names = FALSE)
+    } else if (export_format == "tsv") {
+      summary_filename <- paste(formatted_date, "Combined_Summary.tsv", sep = "_")
+      full_summary_path <- file.path(file_directory, summary_filename)
+      write.table(combined_summary, file = full_summary_path, sep = "\t", row.names = FALSE, quote = FALSE)
+    } else if (export_format == "excel") {
+      summary_filename <- paste(formatted_date, "Combined_Summary.xlsx", sep = "_")
+      full_summary_path <- file.path(file_directory, summary_filename)
+      wb <- openxlsx::createWorkbook()
+      openxlsx::addWorksheet(wb, "Summary")
+      openxlsx::writeData(wb, "Summary", combined_summary)
+      openxlsx::saveWorkbook(wb, full_summary_path, overwrite = TRUE)
+    } else {
+      stop("Invalid export format. Choose 'csv', 'tsv', or 'excel'.")
+    }
+    print(paste("Summary table exported to:", full_summary_path))
   }
 
-  print(paste("Summary table exported to:", full_summary_path))
+  return(invisible(combined_summary))
 }
 
 #' Categorize and Plot Genes
@@ -62,9 +67,10 @@ combine_summary <- function(pubmed_search_results, string_results, file_director
 #' @param string_results Data frame with STRING metrics.
 #' @param pubmed_search_results Data frame with PubMed search results.
 #' @param file_directory Directory for saving the output plot.
+#' @param export Logical indicating whether to export the plot. Defaults to FALSE.
 #' @param threshold_percentage Percentage threshold for ranking (default is 20%).
 #' @export
-categorize_and_plot_genes <- function(string_results, pubmed_search_results, file_directory, threshold_percentage = 20) {
+categorize_and_plot_genes <- function(string_results, pubmed_search_results, file_directory, export = FALSE, threshold_percentage = 20) {
   current_date <- Sys.Date()
   formatted_date <- format(current_date, "%m.%d.%Y")
 
@@ -84,10 +90,6 @@ categorize_and_plot_genes <- function(string_results, pubmed_search_results, fil
   print(paste("Number of High Connectivity - High Precedence genes:", sum(combined_string_results$Category == "High Connectivity - High Precedence")))
   print(paste("Number of High Connectivity - Low Precedence genes:", sum(combined_string_results$Category == "High Connectivity - Low Precedence")))
 
-  rank_scatter_output_filename <- paste(formatted_date, "Connectivity_vs_Precedence.png", sep = "_")
-  full_rank_scatter_output_path <- file.path(file_directory, rank_scatter_output_filename)
-
-  png(filename = full_rank_scatter_output_path, width = 1000, height = 800, res = 150)
   plot <- ggplot(combined_string_results, aes(x = Connectivity_Rank, y = PubMed_Rank, color = Category)) +
     geom_point(alpha = 1) +
     scale_color_manual(values = c("High Connectivity - High Precedence" = "navy", "High Connectivity - Low Precedence" = "red", "Other" = "black")) +
@@ -109,7 +111,16 @@ categorize_and_plot_genes <- function(string_results, pubmed_search_results, fil
       panel.border = element_rect(color = "black", fill = NA, size = 1)
     )
 
-  print(plot)
-  dev.off()
-  print("Plot exported and device closed.")
+  if (export) {
+    rank_scatter_output_filename <- paste(formatted_date, "Connectivity_vs_Precedence.png", sep = "_")
+    full_rank_scatter_output_path <- file.path(file_directory, rank_scatter_output_filename)
+    png(filename = full_rank_scatter_output_path, width = 1000, height = 800, res = 150)
+    print(plot)
+    dev.off()
+    print("Plot exported and device closed.")
+  } else {
+    print(plot)
+  }
+
+  return(invisible(plot))
 }

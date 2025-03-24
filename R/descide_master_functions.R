@@ -8,9 +8,11 @@
 #' @param export_format Format for export, either "csv", "tsv", or "excel".
 #' @param threshold_percentage Percentage threshold for ranking (default is 20%).
 #' @param species The NCBI taxon ID of the species. Defaults to 9606 (Homo sapiens).
-#' @param network_type The type of network to use, either "full" or "physical". Defaults to "full.
+#' @param network_type The type of network to use, either "full" or "physical". Defaults to "full".
 #' @param score_threshold The minimum score threshold for interactions. Defaults to 400.
 #' @param rank_method The method to rank results, either "weighted" or "total". Defaults to "weighted".
+#' @param export Logical indicating whether to export the results. Defaults to FALSE.
+#' @return A list containing the PubMed search results, STRING results, and combined summary path.
 #' @export
 descide <- function(genes_list, terms_list, file_directory,
                     export_format = "csv",
@@ -18,7 +20,8 @@ descide <- function(genes_list, terms_list, file_directory,
                     species = 9606,
                     network_type = "full",
                     score_threshold = 400,
-                    rank_method = "weighted") {
+                    rank_method = "weighted",
+                    export = FALSE) {
 
   log_message <- function(message) {
     cat(paste0(Sys.time(), ": ", message, "\n"))
@@ -35,11 +38,11 @@ descide <- function(genes_list, terms_list, file_directory,
   pubmed_search_results <- search_pubmed(genes_list, terms_list, rank_method)
 
   log_message("PubMed search completed. Results:")
-  print(pubmed_search_results)
+  print(head(pubmed_search_results))
 
   # Step 2: Plot heatmap of PubMed search results
   log_message("Plotting heatmap of PubMed search results")
-  plot_heatmap(pubmed_search_results, file_directory)
+  plot_heatmap(pubmed_search_results, file_directory, export)
 
   # Step 3: Perform STRING database search
   log_message("Performing STRING database search")
@@ -54,21 +57,21 @@ descide <- function(genes_list, terms_list, file_directory,
 
   # Step 4: Plot STRING network interactions
   log_message("Plotting STRING network interactions")
-  plot_string_network(string_db, string_ids, file_directory)
+  plot_string_network(string_db, string_ids, file_directory, export)
 
   # Step 5: Combine PubMed and STRING summaries
   log_message("Combining summaries")
-  combine_summary(pubmed_search_results, string_results, file_directory, export_format)
+  combined_summary <- combine_summary(pubmed_search_results, string_results, file_directory, export_format, export)
 
   # Step 6: Plot degree vs. clustering coefficient
   log_message("Plotting clustering coefficient")
   print(paste("Data passed to plot_clustering function"))
   print(str(string_results))
-  plot_clustering(string_results, file_directory)
+  plot_clustering(string_results, file_directory, export)
 
   # Step 7: Categorize and plot genes
   log_message("Categorizing and plotting genes")
-  categorize_and_plot_genes(string_results, pubmed_search_results, file_directory, threshold_percentage)
+  categorize_and_plot_genes(string_results, pubmed_search_results, file_directory, export, threshold_percentage)
 
   log_message("FINISHED: Analysis pipeline completed")
 
@@ -79,7 +82,11 @@ descide <- function(genes_list, terms_list, file_directory,
     "tsv" = paste0(combined_summary_filename, ".tsv"),
     "excel" = paste0(combined_summary_filename, ".xlsx")
   )
-
   full_combined_summary_path <- file.path(file_directory, combined_summary_filename)
-  return(full_combined_summary_path)
+
+  return(list(
+    search_results = pubmed_search_results,
+    string_results = string_results,
+    combined_summary_path = if (export) full_combined_summary_path else combined_summary
+  ))
 }

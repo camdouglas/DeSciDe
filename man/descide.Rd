@@ -13,7 +13,8 @@ descide(
   species = 9606,
   network_type = "full",
   score_threshold = 400,
-  rank_method = "weighted"
+  rank_method = "weighted",
+  export = FALSE
 )
 }
 \arguments{
@@ -29,11 +30,16 @@ descide(
 
 \item{species}{The NCBI taxon ID of the species. Defaults to 9606 (Homo sapiens).}
 
-\item{network_type}{The type of network to use, either "full" or "physical". Defaults to "full.}
+\item{network_type}{The type of network to use, either "full" or "physical". Defaults to "full".}
 
 \item{score_threshold}{The minimum score threshold for interactions. Defaults to 400.}
 
 \item{rank_method}{The method to rank results, either "weighted" or "total". Defaults to "weighted".}
+
+\item{export}{Logical indicating whether to export the results. Defaults to FALSE.}
+}
+\value{
+A list containing the PubMed search results, STRING results, and combined summary path.
 }
 \description{
 Run the entire analysis pipeline including PubMed search, STRING database search, and plotting.

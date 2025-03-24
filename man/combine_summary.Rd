@@ -8,7 +8,8 @@ combine_summary(
   pubmed_search_results,
   string_results,
   file_directory,
-  export_format = "csv"
+  export_format = "csv",
+  export = FALSE
 )
 }
 \arguments{
@@ -19,6 +20,11 @@ combine_summary(
 \item{file_directory}{Directory for saving the output summary.}
 
 \item{export_format}{Format for export, either "csv", "tsv", or "excel".}
+
+\item{export}{Logical indicating whether to export the summary. Defaults to FALSE.}
+}
+\value{
+A data frame with combined summary.
 }
 \description{
 Combine PubMed search summary and STRING gene metrics.

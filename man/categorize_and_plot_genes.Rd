@@ -8,6 +8,7 @@ categorize_and_plot_genes(
   string_results,
   pubmed_search_results,
   file_directory,
+  export = FALSE,
   threshold_percentage = 20
 )
 }
@@ -17,6 +18,8 @@ categorize_and_plot_genes(
 \item{pubmed_search_results}{Data frame with PubMed search results.}
 
 \item{file_directory}{Directory for saving the output plot.}
+
+\item{export}{Logical indicating whether to export the plot. Defaults to FALSE.}
 
 \item{threshold_percentage}{Percentage threshold for ranking (default is 20\%).}
 }

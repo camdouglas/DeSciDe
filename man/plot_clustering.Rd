@@ -4,12 +4,14 @@
 \alias{plot_clustering}
 \title{Plot STRING Interactions}
 \usage{
-plot_clustering(string_results, file_directory)
+plot_clustering(string_results, file_directory, export = FALSE)
 }
 \arguments{
 \item{string_results}{Data frame with STRING metrics.}
 
 \item{file_directory}{Directory for saving the output plot.}
+
+\item{export}{Logical indicating whether to export the plot. Defaults to FALSE.}
 }
 \description{
 Plot STRING interactions degree vs. clustering.
