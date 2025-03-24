@@ -11,7 +11,7 @@ descide(
   export_format = "csv",
   threshold_percentage = 20,
   species = 9606,
-  network_type = "functional",
+  network_type = "full",
   score_threshold = 400,
   rank_method = "weighted"
 )
@@ -29,7 +29,7 @@ descide(
 
 \item{species}{The NCBI taxon ID of the species. Defaults to 9606 (Homo sapiens).}
 
-\item{network_type}{The type of network to use, either "full" or "physical". Defaults to "functional".}
+\item{network_type}{The type of network to use, either "full" or "physical". Defaults to "full.}
 
 \item{score_threshold}{The minimum score threshold for interactions. Defaults to 400.}
 

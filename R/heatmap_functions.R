@@ -27,6 +27,9 @@ plot_heatmap <- function(pubmed_search_results, file_directory) {
     select(-Total, -PubMed_Rank) %>%
     column_to_rownames("Gene")
 
+  # Convert data frame to matrix
+  heatmap_data <- as.matrix(heatmap_data)
+
   column_min <- apply(heatmap_data, 2, min, na.rm = TRUE)
   column_max <- apply(heatmap_data, 2, max, na.rm = TRUE)
   color_scales <- lapply(seq_len(ncol(heatmap_data)), function(i) {

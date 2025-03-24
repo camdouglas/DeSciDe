@@ -8,7 +8,7 @@
 #' @param export_format Format for export, either "csv", "tsv", or "excel".
 #' @param threshold_percentage Percentage threshold for ranking (default is 20%).
 #' @param species The NCBI taxon ID of the species. Defaults to 9606 (Homo sapiens).
-#' @param network_type The type of network to use, either "full" or "physical". Defaults to "functional".
+#' @param network_type The type of network to use, either "full" or "physical". Defaults to "full.
 #' @param score_threshold The minimum score threshold for interactions. Defaults to 400.
 #' @param rank_method The method to rank results, either "weighted" or "total". Defaults to "weighted".
 #' @export
@@ -16,7 +16,7 @@ descide <- function(genes_list, terms_list, file_directory,
                     export_format = "csv",
                     threshold_percentage = 20,
                     species = 9606,
-                    network_type = "functional",
+                    network_type = "full",
                     score_threshold = 400,
                     rank_method = "weighted") {
 

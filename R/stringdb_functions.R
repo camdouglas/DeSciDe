@@ -24,7 +24,7 @@ utils::globalVariables(c(
 #' @return A list containing metrics, STRINGdb object, and STRING IDs.
 #' @export
 search_string_db <- function(genes_list, species = 9606, network_type = "full", score_threshold = 400) {
-  string_db <- STRINGdb$new(species = species, score_threshold = score_threshold, input_directory = "", network_type = network_type)
+  string_db <- STRINGdb$new(species = species, score_threshold = score_threshold, input_directory = "", network_type = network_type, version = "12.0")
 
   mapped_genes <- string_db$map(data.frame(gene = genes_list), "gene", takeFirst = TRUE, removeUnmappedRows = TRUE)
   unique_mapped_genes <- mapped_genes %>% group_by(gene) %>% slice(1)
@@ -135,7 +135,7 @@ plot_clustering <- function(string_results, file_directory) {
   string_results$Degree <- as.numeric(string_results$Degree)
   string_results$Clustering_Coefficient_Percent <- as.numeric(string_results$Clustering_Coefficient_Percent)
 
-  log_message(paste("After conversion - Data types of columns:"))
+  log_message("After conversion - Data types of columns:")
   print(str(string_results))
 
   scatter_output_filename <- paste(formatted_date, "Degree_vs_ClusteringCoefficient.png", sep = "_")
