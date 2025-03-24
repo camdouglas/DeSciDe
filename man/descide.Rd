@@ -12,7 +12,8 @@ descide(
   threshold_percentage = 20,
   species = 9606,
   network_type = "functional",
-  score_threshold = 400
+  score_threshold = 400,
+  rank_method = "weighted"
 )
 }
 \arguments{
@@ -28,9 +29,11 @@ descide(
 
 \item{species}{The NCBI taxon ID of the species. Defaults to 9606 (Homo sapiens).}
 
-\item{network_type}{The type of network to use, either "functional" or "physical". Defaults to "functional".}
+\item{network_type}{The type of network to use, either "full" or "physical". Defaults to "functional".}
 
 \item{score_threshold}{The minimum score threshold for interactions. Defaults to 400.}
+
+\item{rank_method}{The method to rank results, either "weighted" or "total". Defaults to "weighted".}
 }
 \description{
 Run the entire analysis pipeline including PubMed search, STRING database search, and plotting.

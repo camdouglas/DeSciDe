@@ -7,7 +7,7 @@
 search_string_db(
   genes_list,
   species = 9606,
-  network_type = "functional",
+  network_type = "full",
   score_threshold = 400
 )
 }
@@ -16,7 +16,7 @@ search_string_db(
 
 \item{species}{The NCBI taxon ID of the species. Defaults to 9606 (Homo sapiens).}
 
-\item{network_type}{The type of network to use, either "functional" or "physical". Defaults to "functional".}
+\item{network_type}{The type of network to use, either "full" or "physical". Defaults to "full".}
 
 \item{score_threshold}{The minimum score threshold for interactions. Defaults to 400.}
 }

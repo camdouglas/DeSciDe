@@ -4,12 +4,14 @@
 \alias{search_pubmed}
 \title{Search PubMed with Multiple Genes and Terms}
 \usage{
-search_pubmed(genes_list, terms_list)
+search_pubmed(genes_list, terms_list, rank_method = "weighted")
 }
 \arguments{
 \item{genes_list}{A list of genes.}
 
 \item{terms_list}{A list of terms.}
+
+\item{rank_method}{The method to rank results, either "weighted" or "total". Defaults to "weighted".}
 }
 \value{
 A data frame with search results.

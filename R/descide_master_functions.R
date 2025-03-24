@@ -8,15 +8,17 @@
 #' @param export_format Format for export, either "csv", "tsv", or "excel".
 #' @param threshold_percentage Percentage threshold for ranking (default is 20%).
 #' @param species The NCBI taxon ID of the species. Defaults to 9606 (Homo sapiens).
-#' @param network_type The type of network to use, either "functional" or "physical". Defaults to "functional".
+#' @param network_type The type of network to use, either "full" or "physical". Defaults to "functional".
 #' @param score_threshold The minimum score threshold for interactions. Defaults to 400.
+#' @param rank_method The method to rank results, either "weighted" or "total". Defaults to "weighted".
 #' @export
 descide <- function(genes_list, terms_list, file_directory,
                     export_format = "csv",
                     threshold_percentage = 20,
                     species = 9606,
                     network_type = "functional",
-                    score_threshold = 400) {
+                    score_threshold = 400,
+                    rank_method = "weighted") {
 
   log_message <- function(message) {
     cat(paste0(Sys.time(), ": ", message, "\n"))
@@ -30,10 +32,10 @@ descide <- function(genes_list, terms_list, file_directory,
 
   # Step 1: Perform PubMed search
   log_message("Performing PubMed search")
-  pubmed_search_results <- search_pubmed(genes_list, terms_list)
+  pubmed_search_results <- search_pubmed(genes_list, terms_list, rank_method)
 
   log_message("PubMed search completed. Results:")
-  print(head(pubmed_search_results))
+  print(pubmed_search_results)
 
   # Step 2: Plot heatmap of PubMed search results
   log_message("Plotting heatmap of PubMed search results")

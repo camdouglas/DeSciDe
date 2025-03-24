@@ -20,7 +20,7 @@ utils::globalVariables(c(
 #' @return An integer representing the number of PubMed articles found.
 #' @export
 single_pubmed_search <- function(gene, term) {
-  query <- paste(gene, term, sep=" AND ")
+  query <- paste(gene, term, sep = " AND ")
   single_search_results <- entrez_search(db = "pubmed", term = query)
   return(single_search_results$count)
 }
@@ -58,10 +58,12 @@ rank_search_results <- function(data, terms_list, rank_method = "weighted") {
 #'
 #' @param genes_list A list of genes.
 #' @param terms_list A list of terms.
+#' @param rank_method The method to rank results, either "weighted" or "total". Defaults to "weighted".
 #' @return A data frame with search results.
 #' @export
-search_pubmed <- function(genes_list, terms_list) {
+search_pubmed <- function(genes_list, terms_list, rank_method = "weighted") {
   single_search_results <- data.frame(Gene = character(), Term = character(), Count = integer())
+
   for (gene in genes_list) {
     for (term in terms_list) {
       count <- single_pubmed_search(gene, term)
@@ -76,7 +78,7 @@ search_pubmed <- function(genes_list, terms_list) {
   pubmed_search_results <- aggregated_results %>%
     pivot_wider(names_from = Term, values_from = Count, values_fill = list(Count = 0))
 
-  pubmed_search_results <- rank_search_results(pubmed_search_results, terms_list)
+  pubmed_search_results <- rank_search_results(pubmed_search_results, terms_list, rank_method)
 
   return(pubmed_search_results)
 }
