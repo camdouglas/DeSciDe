@@ -7,7 +7,7 @@
 descide(
   genes_list,
   terms_list,
-  file_directory,
+  file_directory = NULL,
   export_format = "csv",
   threshold_percentage = 20,
   species = 9606,
@@ -22,7 +22,7 @@ descide(
 
 \item{terms_list}{A list of terms.}
 
-\item{file_directory}{Directory for saving the output files.}
+\item{file_directory}{Directory for saving the output files. Defaults to NULL.}
 
 \item{export_format}{Format for export, either "csv", "tsv", or "excel".}
 

@@ -4,12 +4,12 @@
 \alias{plot_heatmap}
 \title{Plot Heatmap}
 \usage{
-plot_heatmap(pubmed_search_results, file_directory, export = FALSE)
+plot_heatmap(pubmed_search_results, file_directory = NULL, export = FALSE)
 }
 \arguments{
 \item{pubmed_search_results}{A data frame containing raw search results with genes and terms.}
 
-\item{file_directory}{Directory for saving the output plot.}
+\item{file_directory}{Directory for saving the output plot. Defaults to NULL.}
 
 \item{export}{Logical indicating whether to export the plot. Defaults to FALSE.}
 }

@@ -7,7 +7,7 @@
 combine_summary(
   pubmed_search_results,
   string_results,
-  file_directory,
+  file_directory = NULL,
   export_format = "csv",
   export = FALSE
 )
@@ -17,7 +17,7 @@ combine_summary(
 
 \item{string_results}{Data frame with STRING metrics.}
 
-\item{file_directory}{Directory for saving the output summary.}
+\item{file_directory}{Directory for saving the output summary. Defaults to NULL.}
 
 \item{export_format}{Format for export, either "csv", "tsv", or "excel".}
 

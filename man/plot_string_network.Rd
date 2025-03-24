@@ -4,14 +4,19 @@
 \alias{plot_string_network}
 \title{Plot STRING Network}
 \usage{
-plot_string_network(string_db, string_ids, file_directory, export = FALSE)
+plot_string_network(
+  string_db,
+  string_ids,
+  file_directory = NULL,
+  export = FALSE
+)
 }
 \arguments{
 \item{string_db}{A STRINGdb object.}
 
 \item{string_ids}{A list of STRING IDs.}
 
-\item{file_directory}{Directory for saving the output plot.}
+\item{file_directory}{Directory for saving the output plot. Defaults to NULL.}
 
 \item{export}{Logical indicating whether to export the plot. Defaults to FALSE.}
 }

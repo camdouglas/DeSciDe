@@ -4,7 +4,7 @@
 #'
 #' @param genes_list A list of genes.
 #' @param terms_list A list of terms.
-#' @param file_directory Directory for saving the output files.
+#' @param file_directory Directory for saving the output files. Defaults to NULL.
 #' @param export_format Format for export, either "csv", "tsv", or "excel".
 #' @param threshold_percentage Percentage threshold for ranking (default is 20%).
 #' @param species The NCBI taxon ID of the species. Defaults to 9606 (Homo sapiens).
@@ -14,7 +14,8 @@
 #' @param export Logical indicating whether to export the results. Defaults to FALSE.
 #' @return A list containing the PubMed search results, STRING results, and combined summary path.
 #' @export
-descide <- function(genes_list, terms_list, file_directory,
+descide <- function(genes_list, terms_list,
+                    file_directory = NULL,
                     export_format = "csv",
                     threshold_percentage = 20,
                     species = 9606,
@@ -32,6 +33,10 @@ descide <- function(genes_list, terms_list, file_directory,
   # Automatically set current_date to the system date and format it
   current_date <- Sys.Date()
   formatted_date <- format(current_date, "%m.%d.%Y")
+
+  if (export && is.null(file_directory)) {
+    stop("Export is set to TRUE, but file_directory is not provided.")
+  }
 
   # Step 1: Perform PubMed search
   log_message("Performing PubMed search")
@@ -82,7 +87,8 @@ descide <- function(genes_list, terms_list, file_directory,
     "tsv" = paste0(combined_summary_filename, ".tsv"),
     "excel" = paste0(combined_summary_filename, ".xlsx")
   )
-  full_combined_summary_path <- file.path(file_directory, combined_summary_filename)
+
+  full_combined_summary_path <- if (export) file.path(file_directory, combined_summary_filename) else NULL
 
   return(list(
     search_results = pubmed_search_results,

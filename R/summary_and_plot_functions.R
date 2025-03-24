@@ -20,12 +20,12 @@ utils::globalVariables(c(
 #'
 #' @param pubmed_search_results Data frame with PubMed search results.
 #' @param string_results Data frame with STRING metrics.
-#' @param file_directory Directory for saving the output summary.
+#' @param file_directory Directory for saving the output summary. Defaults to NULL.
 #' @param export_format Format for export, either "csv", "tsv", or "excel".
 #' @param export Logical indicating whether to export the summary. Defaults to FALSE.
 #' @return A data frame with combined summary.
 #' @export
-combine_summary <- function(pubmed_search_results, string_results, file_directory, export_format = "csv", export = FALSE) {
+combine_summary <- function(pubmed_search_results, string_results, file_directory = NULL, export_format = "csv", export = FALSE) {
   current_date <- Sys.Date()
   formatted_date <- format(current_date, "%m.%d.%Y")
 
@@ -35,7 +35,7 @@ combine_summary <- function(pubmed_search_results, string_results, file_director
   combined_summary <- pubmed_search_results %>%
     left_join(string_results, by = "Gene")
 
-  if (export) {
+  if (export && !is.null(file_directory)) {
     if (export_format == "csv") {
       summary_filename <- paste(formatted_date, "Combined_Summary.csv", sep = "_")
       full_summary_path <- file.path(file_directory, summary_filename)
@@ -66,11 +66,11 @@ combine_summary <- function(pubmed_search_results, string_results, file_director
 #'
 #' @param string_results Data frame with STRING metrics.
 #' @param pubmed_search_results Data frame with PubMed search results.
-#' @param file_directory Directory for saving the output plot.
+#' @param file_directory Directory for saving the output plot. Defaults to NULL.
 #' @param export Logical indicating whether to export the plot. Defaults to FALSE.
 #' @param threshold_percentage Percentage threshold for ranking (default is 20%).
 #' @export
-categorize_and_plot_genes <- function(string_results, pubmed_search_results, file_directory, export = FALSE, threshold_percentage = 20) {
+categorize_and_plot_genes <- function(string_results, pubmed_search_results, file_directory = NULL, export = FALSE, threshold_percentage = 20) {
   current_date <- Sys.Date()
   formatted_date <- format(current_date, "%m.%d.%Y")
 
@@ -111,7 +111,7 @@ categorize_and_plot_genes <- function(string_results, pubmed_search_results, fil
       panel.border = element_rect(color = "black", fill = NA, size = 1)
     )
 
-  if (export) {
+  if (export && !is.null(file_directory)) {
     rank_scatter_output_filename <- paste(formatted_date, "Connectivity_vs_Precedence.png", sep = "_")
     full_rank_scatter_output_path <- file.path(file_directory, rank_scatter_output_filename)
     png(filename = full_rank_scatter_output_path, width = 1000, height = 800, res = 150)

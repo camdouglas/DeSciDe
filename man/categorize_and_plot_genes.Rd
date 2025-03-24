@@ -7,7 +7,7 @@
 categorize_and_plot_genes(
   string_results,
   pubmed_search_results,
-  file_directory,
+  file_directory = NULL,
   export = FALSE,
   threshold_percentage = 20
 )
@@ -17,7 +17,7 @@ categorize_and_plot_genes(
 
 \item{pubmed_search_results}{Data frame with PubMed search results.}
 
-\item{file_directory}{Directory for saving the output plot.}
+\item{file_directory}{Directory for saving the output plot. Defaults to NULL.}
 
 \item{export}{Logical indicating whether to export the plot. Defaults to FALSE.}
 

@@ -16,10 +16,10 @@ utils::globalVariables(c(
 #' Create and save (optional) a heatmap of the PubMed search results.
 #'
 #' @param pubmed_search_results A data frame containing raw search results with genes and terms.
-#' @param file_directory Directory for saving the output plot.
+#' @param file_directory Directory for saving the output plot. Defaults to NULL.
 #' @param export Logical indicating whether to export the plot. Defaults to FALSE.
 #' @export
-plot_heatmap <- function(pubmed_search_results, file_directory, export = FALSE) {
+plot_heatmap <- function(pubmed_search_results, file_directory = NULL, export = FALSE) {
   current_date <- Sys.Date()
   formatted_date <- format(current_date, "%m.%d.%Y")
 
@@ -53,7 +53,7 @@ plot_heatmap <- function(pubmed_search_results, file_directory, export = FALSE) 
               column_names_gp = gpar(fontface = "bold", just = "center"))
   }
 
-  if (export) {
+  if (export && !is.null(file_directory)) {
     output_filename <- paste(formatted_date, "PubMed_Heatmap.png", sep = "_")
     full_output_path <- file.path(file_directory, output_filename)
     png(filename = full_output_path, width = 800, height = 1200)
