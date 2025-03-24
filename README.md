@@ -20,7 +20,7 @@ You can install the development version of DeSciDe from GitHub using the `devtoo
     install.packages("devtools")
 
     # Install DeSciDe from GitHub
-    devtools::install_github("yourusername/DeSciDe")
+    devtools::install_github("camdouglas/DeSciDe")
 
 Usage
 -----
