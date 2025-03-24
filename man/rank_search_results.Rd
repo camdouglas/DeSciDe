@@ -9,9 +9,9 @@ rank_search_results(data, terms_list, rank_method = "weighted")
 \arguments{
 \item{data}{A data frame containing search results.}
 
-\item{terms_list}{A list of terms used in the search.}
+\item{terms_list}{A list of search terms.}
 
-\item{rank_method}{The method to rank results, either "weighted" or "total".}
+\item{rank_method}{The method to rank pubmed results, either "weighted" or "total". Weighted ranks results based on order of terms inputed. Total ranks results on total sum of publications across all search term combinations. Defaults to "weighted".}
 }
 \value{
 A data frame with ranked search results.

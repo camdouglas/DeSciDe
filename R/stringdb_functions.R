@@ -5,6 +5,7 @@
 #' @importFrom stats setNames
 #' @importFrom grDevices dev.off pdf
 #' @importFrom magrittr %>%
+#' @importFrom utils head str
 NULL
 
 # Declare global variables

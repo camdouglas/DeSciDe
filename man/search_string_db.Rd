@@ -12,13 +12,13 @@ search_string_db(
 )
 }
 \arguments{
-\item{genes_list}{A list of genes.}
+\item{genes_list}{A list of gene IDs.}
 
 \item{species}{The NCBI taxon ID of the species. Defaults to 9606 (Homo sapiens).}
 
 \item{network_type}{The type of network to use, either "full" or "physical". Defaults to "full".}
 
-\item{score_threshold}{The minimum score threshold for interactions. Defaults to 400.}
+\item{score_threshold}{The minimum score threshold for string interactions. Defaults to 400.}
 }
 \value{
 A list containing metrics, STRINGdb object, and STRING IDs.

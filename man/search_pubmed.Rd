@@ -7,9 +7,9 @@
 search_pubmed(genes_list, terms_list, rank_method = "weighted")
 }
 \arguments{
-\item{genes_list}{A list of genes.}
+\item{genes_list}{A list of gene IDs.}
 
-\item{terms_list}{A list of terms.}
+\item{terms_list}{A list of search terms.}
 
 \item{rank_method}{The method to rank results, either "weighted" or "total". Defaults to "weighted".}
 }

@@ -1,3 +1,6 @@
+#' @importFrom utils head str
+NULL
+
 #' Run the Entire Analysis
 #'
 #' Run the entire analysis pipeline including PubMed search, STRING database search, and plotting.
