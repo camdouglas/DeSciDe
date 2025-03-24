@@ -30,11 +30,11 @@ descide(
 
 \item{species}{The NCBI taxon ID of the species. Defaults to 9606 (Homo sapiens).}
 
-\item{network_type}{The type of network to use, either "full" or "physical". Defaults to "full".}
+\item{network_type}{The type of string network to use, either "full" or "physical". Defaults to "full".}
 
-\item{score_threshold}{The minimum score threshold for interactions. Defaults to 400.}
+\item{score_threshold}{The minimum score threshold for string interactions. Defaults to 400.}
 
-\item{rank_method}{The method to rank results, either "weighted" or "total". Defaults to "weighted".}
+\item{rank_method}{The method to rank pubmed results, either "weighted" or "total". Weighted ranks results based on order of terms inputed. Total ranks results on total sum of publications across all search term combinations. Defaults to "weighted".}
 
 \item{export}{Logical indicating whether to export the results. Defaults to FALSE.}
 }

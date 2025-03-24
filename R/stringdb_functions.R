@@ -17,10 +17,10 @@ utils::globalVariables(c(
 #'
 #' Search the STRING database for protein interactions.
 #'
-#' @param genes_list A list of genes.
+#' @param genes_list A list of gene IDs.
 #' @param species The NCBI taxon ID of the species. Defaults to 9606 (Homo sapiens).
 #' @param network_type The type of network to use, either "full" or "physical". Defaults to "full".
-#' @param score_threshold The minimum score threshold for interactions. Defaults to 400.
+#' @param score_threshold The minimum score threshold for string interactions. Defaults to 400.
 #' @return A list containing metrics, STRINGdb object, and STRING IDs.
 #' @export
 search_string_db <- function(genes_list, species = 9606, network_type = "full", score_threshold = 400) {

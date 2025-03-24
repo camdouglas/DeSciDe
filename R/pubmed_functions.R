@@ -30,8 +30,8 @@ single_pubmed_search <- function(gene, term) {
 #' Rank search results based on a chosen method.
 #'
 #' @param data A data frame containing search results.
-#' @param terms_list A list of terms used in the search.
-#' @param rank_method The method to rank results, either "weighted" or "total".
+#' @param terms_list A list of search terms.
+#' @param rank_method The method to rank pubmed results, either "weighted" or "total". Weighted ranks results based on order of terms inputed. Total ranks results on total sum of publications across all search term combinations. Defaults to "weighted".
 #' @return A data frame with ranked search results.
 #' @export
 rank_search_results <- function(data, terms_list, rank_method = "weighted") {
@@ -56,8 +56,8 @@ rank_search_results <- function(data, terms_list, rank_method = "weighted") {
 #'
 #' Perform a PubMed search for multiple genes and terms.
 #'
-#' @param genes_list A list of genes.
-#' @param terms_list A list of terms.
+#' @param genes_list A list of gene IDs.
+#' @param terms_list A list of search terms.
 #' @param rank_method The method to rank results, either "weighted" or "total". Defaults to "weighted".
 #' @return A data frame with search results.
 #' @export

@@ -4,14 +4,14 @@
 #'
 #' @param genes_list A list of genes.
 #' @param terms_list A list of terms.
-#' @param file_directory Directory for saving the output files. Defaults to NULL.
-#' @param export_format Format for export, either "csv", "tsv", or "excel".
 #' @param threshold_percentage Percentage threshold for ranking (default is 20%).
 #' @param species The NCBI taxon ID of the species. Defaults to 9606 (Homo sapiens).
-#' @param network_type The type of network to use, either "full" or "physical". Defaults to "full".
-#' @param score_threshold The minimum score threshold for interactions. Defaults to 400.
-#' @param rank_method The method to rank results, either "weighted" or "total". Defaults to "weighted".
+#' @param network_type The type of string network to use, either "full" or "physical". Defaults to "full".
+#' @param score_threshold The minimum score threshold for string interactions. Defaults to 400.
+#' @param rank_method The method to rank pubmed results, either "weighted" or "total". Weighted ranks results based on order of terms inputed. Total ranks results on total sum of publications across all search term combinations. Defaults to "weighted".
 #' @param export Logical indicating whether to export the results. Defaults to FALSE.
+#' @param file_directory Directory for saving the output files. Defaults to NULL.
+#' @param export_format Format for export, either "csv", "tsv", or "excel".
 #' @return A list containing the PubMed search results, STRING results, and combined summary path.
 #' @export
 descide <- function(genes_list, terms_list,
@@ -91,7 +91,7 @@ descide <- function(genes_list, terms_list,
   full_combined_summary_path <- if (export) file.path(file_directory, combined_summary_filename) else NULL
 
   return(list(
-    search_results = pubmed_search_results,
+    pubmed_results = pubmed_search_results,
     string_results = string_results,
     combined_summary_path = if (export) full_combined_summary_path else combined_summary
   ))
