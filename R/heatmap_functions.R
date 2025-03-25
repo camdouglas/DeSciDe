@@ -20,6 +20,11 @@ utils::globalVariables(c(
 #' @param export Logical indicating whether to export the plot. Defaults to FALSE.
 #' @export
 plot_heatmap <- function(pubmed_search_results, file_directory = NULL, export = FALSE) {
+  if (nrow(pubmed_search_results) == 0) {
+    warning("No data available to plot heatmap.")
+    return(NULL)
+  }
+
   current_date <- Sys.Date()
   formatted_date <- format(current_date, "%m.%d.%Y")
 
@@ -28,11 +33,27 @@ plot_heatmap <- function(pubmed_search_results, file_directory = NULL, export = 
     select(-Total, -PubMed_Rank) %>%
     column_to_rownames("Gene")
 
+  if (nrow(heatmap_data) < 2) {
+    warning("Not enough data to create a meaningful heatmap.")
+    return(NULL)
+  }
+
   # Convert data frame to matrix
   heatmap_data <- as.matrix(heatmap_data)
 
+  if (all(is.na(heatmap_data))) {
+    warning("No valid data points in heatmap data.")
+    return(NULL)
+  }
+
   column_min <- apply(heatmap_data, 2, min, na.rm = TRUE)
   column_max <- apply(heatmap_data, 2, max, na.rm = TRUE)
+
+  if (all(column_min == column_max)) {
+    warning("heatmap_data has identical values in each column; unable to create meaningful color scale.")
+    return(NULL)
+  }
+
   color_scales <- lapply(seq_len(ncol(heatmap_data)), function(i) {
     colorRamp2(c(column_min[i], column_max[i]), c("white", "navy"))
   })

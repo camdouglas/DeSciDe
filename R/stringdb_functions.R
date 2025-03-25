@@ -25,9 +25,19 @@ utils::globalVariables(c(
 #' @return A list containing metrics, STRINGdb object, and STRING IDs.
 #' @export
 search_string_db <- function(genes_list, species = 9606, network_type = "full", score_threshold = 400) {
+  if (length(genes_list) == 0) {
+    warning("No genes provided for STRING database search.")
+    return(list(string_results = data.frame(), string_db = NULL, string_ids = NULL))
+  }
+
   string_db <- STRINGdb$new(species = species, score_threshold = score_threshold, input_directory = "", network_type = network_type, version = "12.0")
 
   mapped_genes <- string_db$map(data.frame(gene = genes_list), "gene", takeFirst = TRUE, removeUnmappedRows = TRUE)
+  if (nrow(mapped_genes) == 0) {
+    warning("No valid genes found in STRING database for provided genes_list.")
+    return(list(string_results = data.frame(), string_db = string_db, string_ids = NULL))
+  }
+
   unique_mapped_genes <- mapped_genes %>% group_by(gene) %>% slice(1)
   string_ids <- unique_mapped_genes$STRING_id
 
@@ -35,6 +45,11 @@ search_string_db <- function(genes_list, species = 9606, network_type = "full", 
   interaction_pairs <- data.table(proteinA = pmin(interactions$from, interactions$to), proteinB = pmax(interactions$from, interactions$to))
   interaction_pairs <- unique(interaction_pairs)
   interaction_pairs <- interaction_pairs[interaction_pairs$proteinA != interaction_pairs$proteinB, ]
+
+  if (nrow(interaction_pairs) == 0) {
+    warning("No interactions found for the provided genes in STRING database.")
+    return(list(string_results = data.frame(), string_db = string_db, string_ids = string_ids))
+  }
 
   nodes <- unique(c(interaction_pairs$proteinA, interaction_pairs$proteinB, string_ids))
   adjacency_matrix <- matrix(0, nrow = length(nodes), ncol = length(nodes), dimnames = list(nodes, nodes))
@@ -97,6 +112,11 @@ search_string_db <- function(genes_list, species = 9606, network_type = "full", 
 #' @param export Logical indicating whether to export the plot. Defaults to FALSE.
 #' @export
 plot_string_network <- function(string_db, string_ids, file_directory = NULL, export = FALSE) {
+  if (is.null(string_db) || is.null(string_ids) || length(string_ids) == 0) {
+    warning("No valid STRING data available to plot network.")
+    return(NULL)
+  }
+
   current_date <- Sys.Date()
   formatted_date <- format(current_date, "%m.%d.%Y")
 
@@ -129,12 +149,15 @@ plot_clustering <- function(string_results, file_directory = NULL, export = FALS
   }
 
   log_message("Inside plot_clustering function")
-  print(paste("Dimensions of string_results:", dim(string_results)))
-  print("First few rows of string_results:")
-  print(head(string_results))
 
-  if(!all(c("Degree", "Clustering_Coefficient_Percent") %in% colnames(string_results))) {
-    stop("Essential columns missing in string_results")
+  if (!all(c("Degree", "Clustering_Coefficient_Percent") %in% colnames(string_results))) {
+    warning("Essential columns missing in string_results")
+    return(NULL)
+  }
+
+  if (nrow(string_results) == 0) {
+    warning("No data available for clustering plot.")
+    return(NULL)
   }
 
   string_results$Degree <- as.numeric(string_results$Degree)

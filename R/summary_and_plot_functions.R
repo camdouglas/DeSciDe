@@ -29,11 +29,34 @@ combine_summary <- function(pubmed_search_results, string_results, file_director
   current_date <- Sys.Date()
   formatted_date <- format(current_date, "%m.%d.%Y")
 
-  colnames(pubmed_search_results)[1] <- "Gene"
-  colnames(string_results)[1] <- "Gene"
+  if (nrow(pubmed_search_results) == 0 && nrow(string_results) == 0) {
+    return(data.frame())
+  }
+
+  if (nrow(pubmed_search_results) > 0) {
+    colnames(pubmed_search_results)[1] <- "Gene"
+  }
+
+  if (nrow(string_results) > 0) {
+    colnames(string_results)[1] <- "Gene"
+  }
+
+  if (nrow(pubmed_search_results) == 0) {
+    pubmed_search_results <- data.frame(Gene = character(0), stringsAsFactors = FALSE)
+    return(pubmed_search_results)
+  }
+
+  if (nrow(string_results) == 0) {
+    string_results <- data.frame(Gene = character(0), stringsAsFactors = FALSE)
+    return(string_results)
+  }
 
   combined_summary <- pubmed_search_results %>%
     left_join(string_results, by = "Gene")
+
+  if (nrow(combined_summary) == 0) {
+    return(combined_summary)
+  }
 
   if (export && !is.null(file_directory)) {
     if (export_format == "csv") {
@@ -71,11 +94,21 @@ combine_summary <- function(pubmed_search_results, string_results, file_director
 #' @param threshold_percentage Percentage threshold for ranking (default is 20%).
 #' @export
 categorize_and_plot_genes <- function(string_results, pubmed_search_results, file_directory = NULL, export = FALSE, threshold_percentage = 20) {
+  if (nrow(string_results) == 0 || nrow(pubmed_search_results) == 0) {
+    warning("Not enough data to categorize and plot genes.")
+    return(NULL)
+  }
+
   current_date <- Sys.Date()
   formatted_date <- format(current_date, "%m.%d.%Y")
 
   combined_string_results <- string_results %>%
     left_join(select(pubmed_search_results, Gene, PubMed_Rank = PubMed_Rank), by = c("Gene_Symbol" = "Gene"))
+
+  if (!("Gene_Symbol" %in% colnames(combined_string_results)) || !("PubMed_Rank" %in% colnames(combined_string_results))) {
+    warning("Gene_Symbol or PubMed_Rank columns missing after join.")
+    return(NULL)
+  }
 
   top_threshold <- ceiling(nrow(combined_string_results) * (threshold_percentage / 100))
   bottom_threshold <- nrow(combined_string_results) - top_threshold + 1
@@ -86,9 +119,6 @@ categorize_and_plot_genes <- function(string_results, pubmed_search_results, fil
       Connectivity_Rank <= top_threshold & PubMed_Rank >= bottom_threshold ~ "High Connectivity - Low Precedence",
       TRUE ~ "Other"
     ))
-
-  print(paste("Number of High Connectivity - High Precedence genes:", sum(combined_string_results$Category == "High Connectivity - High Precedence")))
-  print(paste("Number of High Connectivity - Low Precedence genes:", sum(combined_string_results$Category == "High Connectivity - Low Precedence")))
 
   plot <- ggplot(combined_string_results, aes(x = Connectivity_Rank, y = PubMed_Rank, color = Category)) +
     geom_point(alpha = 1) +
