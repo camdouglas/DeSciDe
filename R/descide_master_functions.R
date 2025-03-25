@@ -96,6 +96,6 @@ descide <- function(genes_list, terms_list,
   return(list(
     pubmed_results = pubmed_search_results,
     string_results = string_results,
-    results_summary = if (export) full_combined_summary_path else combined_summary
+    summary_results = if (export) full_combined_summary_path else combined_summary
   ))
 }
