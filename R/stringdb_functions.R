@@ -158,7 +158,7 @@ plot_clustering <- function(string_results, file_directory = NULL, export = FALS
       panel.grid.minor = element_blank(),
       axis.ticks = element_line(color = "black"),
       axis.line = element_blank(),
-      panel.border = element_rect(color = "black", fill = NA, size = 1)
+      panel.border = element_rect(color = "black", fill = NA, linewidth = 1)
     )
 
   if (export && !is.null(file_directory)) {
