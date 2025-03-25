@@ -1,0 +1,73 @@
+# Load necessary packages
+library(testthat)
+library(DeSciDe)
+library(withr)
+
+test_that("descide function works correctly without export", {
+  # Define the genes and terms lists
+  genes_list <- c("JUN", "MYC", "HDAC1", "TRIM33")
+  terms_list <- c("cancer", "romidepsin")
+
+  # Capture messages and warnings to check function execution
+  f_capture_output <- capture.output({
+    results <- descide(
+      genes_list = genes_list,
+      terms_list = terms_list,
+      export = FALSE
+    )
+  })
+
+  # Check that results is a list
+  expect_type(results, "list")
+
+  # Check that pubmed_results, string_results, and summary_results are data frames
+  expect_s3_class(results$pubmed_results, "data.frame")
+  expect_s3_class(results$string_results, "data.frame")
+  expect_s3_class(results$summary_results, "data.frame")
+
+  # Ensure pubmed_results has rows
+  expect_gt(nrow(results$pubmed_results), 0)
+
+  # Ensure string_results has rows
+  expect_gt(nrow(results$string_results), 0)
+
+  # Ensure summary_results has rows
+  expect_gt(nrow(results$summary_results), 0)
+
+  # Assert that certain output messages were printed during the plot functions
+  expect_true(any(grepl("Starting analysis pipeline", f_capture_output)))
+  expect_true(any(grepl("Plotting heatmap of PubMed search results", f_capture_output)))
+  expect_true(any(grepl("Performing STRING database search", f_capture_output)))
+  expect_true(any(grepl("Plotting STRING network interactions", f_capture_output)))
+  expect_true(any(grepl("Combining summaries", f_capture_output)))
+  expect_true(any(grepl("Plotting clustering coefficient", f_capture_output)))
+  expect_true(any(grepl("Categorizing and plotting genes", f_capture_output)))
+  expect_true(any(grepl("FINISHED: Analysis pipeline completed", f_capture_output)))
+})
+
+test_that("plotting functions execute without error", {
+  # Define genes and terms lists
+  genes_list <- c("JUN", "MYC", "HDAC1", "TRIM33")
+  terms_list <- c("cancer", "romidepsin")
+
+  # Run descide function
+  results <- descide(
+    genes_list = genes_list,
+    terms_list = terms_list,
+    export = FALSE
+  )
+
+  # Debug: Inspect results for string_db and string_ids
+  print(str(results$string_db))
+  print(str(results$string_ids))
+
+  # Ensure plot functions execute without error
+  expect_no_error(plot_heatmap(results$pubmed_results))
+  expect_no_error({
+    if (is.list(results$string_db)){
+      plot_string_network(results$string_db, results$string_ids)
+    }
+  })
+  expect_no_error(plot_clustering(results$string_results))
+  expect_no_error(categorize_and_plot_genes(results$string_results, results$pubmed_results))
+})
