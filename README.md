@@ -1,5 +1,4 @@
-# DeSciDe: A Tool for Unbiased Literature Searching and Gene List Curation
-
+# DeSciDe: A Tool for unbiased gene selection by simple visual analysis.
 
 DeSciDe (Deciphering Scientific Discoveries) is an R package designed for genomic and proteomic data analysis, PubMed search, protein interaction network visualization, and comprehensive data summarization.
 
@@ -8,6 +7,7 @@ Features
 
 - Perform PubMed searches for a list of genes and terms.
 - Search the STRING database for protein interactions.
+- Rank PubMed and STRING search results to identify high confidence and novel hits. 
 - Visualize results using heatmaps and network plots.
 - Summarize data from multiple sources.
 
