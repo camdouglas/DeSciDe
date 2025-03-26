@@ -2,7 +2,7 @@
 % Please edit documentation in R/descide_master_functions.R
 \name{descide}
 \alias{descide}
-\title{Run the Entire Analysis}
+\title{Run DeSciDe pipeline}
 \usage{
 descide(
   genes_list,
@@ -39,7 +39,7 @@ descide(
 \item{export_format}{Format for export, either "csv", "tsv", or "excel".}
 }
 \value{
-A list containing the PubMed search results, STRING results, and combined summary path.
+A list containing the PubMed search results, STRING results, and summary results.
 }
 \description{
 Run the entire analysis pipeline including PubMed search, STRING database search, and plotting.
