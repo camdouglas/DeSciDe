@@ -5,7 +5,7 @@ Version: 0.1.0
 Authors@R: 
     person("Cameron", "Douglas", email = "camerondouglas@ufl.edu", role = c("aut", "cre"))
 Description: DeSciDe (Deciphering Scientific Discoveries) is an R package designed for genomic and proteomic data analysis, PubMed search, protein interaction network visualization, and comprehensive data summarization.
-License: GPL-3
+License: MIT
 Encoding: UTF-8
 LazyData: true
 Imports: 
