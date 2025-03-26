@@ -1,7 +1,7 @@
 #' @importFrom utils head str
 NULL
 
-#' Run the Entire Analysis
+#' Run DeSciDe pipeline
 #'
 #' Run the entire analysis pipeline including PubMed search, STRING database search, and plotting.
 #'
@@ -15,7 +15,7 @@ NULL
 #' @param export Logical indicating whether to export the results. Defaults to FALSE.
 #' @param file_directory Directory for saving the output files. Defaults to NULL.
 #' @param export_format Format for export, either "csv", "tsv", or "excel".
-#' @return A list containing the PubMed search results, STRING results, and combined summary path.
+#' @return A list containing the PubMed search results, STRING results, and summary results.
 #' @export
 descide <- function(genes_list, terms_list,
                     rank_method = "weighted",
