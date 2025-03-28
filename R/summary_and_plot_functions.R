@@ -1,6 +1,7 @@
 # Import required functions and operators
 #' @importFrom dplyr left_join mutate arrange desc row_number select filter case_when all_of across
 #' @importFrom ggplot2 aes geom_point geom_text scale_color_manual theme_minimal labs theme element_text element_blank element_line element_rect ggplot
+#' @importFrom ggrepel geom_text_repel
 #' @importFrom grDevices dev.off png
 #' @importFrom stats setNames
 #' @importFrom utils write.csv write.table
@@ -123,7 +124,7 @@ categorize_and_plot_genes <- function(string_results, pubmed_search_results, fil
   plot <- ggplot(combined_string_results, aes(x = Connectivity_Rank, y = PubMed_Rank, color = Category)) +
     geom_point(alpha = 1) +
     scale_color_manual(values = c("High Connectivity - High Precedence" = "navy", "High Connectivity - Low Precedence" = "red", "Other" = "black")) +
-    geom_text(data = combined_string_results %>% filter(Category != "Other"), aes(label = Gene_Symbol, color = Category), vjust = -0.5, hjust = -0.5, size = 3, show.legend = FALSE) +
+    geom_text_repel(data = combined_string_results %>% filter(Category != "Other"), aes(label = Gene_Symbol, color = Category), size = 3, show.legend = FALSE, max.overlaps = 20) +
     theme_minimal() +
     labs(title = "Connectivity vs. Precedence",
          x = "Connectivity Rank",
