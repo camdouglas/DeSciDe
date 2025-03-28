@@ -20,7 +20,7 @@ utils::globalVariables(c(
 #' @return An integer representing the number of PubMed articles found.
 #' @export
 single_pubmed_search <- function(gene, term) {
-  query <- paste0(gene, "[TIAB] AND ", term, "[TIAB]")
+  query <- paste0('"', gene, "[TIAB]\"", " AND ", '"', term, "[TIAB]\"")
   single_search_results <- entrez_search(db = "pubmed", term = query)
   return(single_search_results$count)
 }
