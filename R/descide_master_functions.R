@@ -69,7 +69,7 @@ descide <- function(genes_list, terms_list,
 
   # Step 5: Combine PubMed and STRING summaries
   log_message("Combining summaries")
-  combined_summary <- combine_summary(pubmed_search_results, string_results, file_directory, export_format, export)
+  combined_summary <- combine_summary(pubmed_search_results, string_results, file_directory, export_format, export, threshold_percentage)
 
   # Step 6: Plot degree vs. clustering coefficient
   log_message("Plotting clustering coefficient")
@@ -79,7 +79,7 @@ descide <- function(genes_list, terms_list,
 
   # Step 7: Categorize and plot genes
   log_message("Categorizing and plotting genes")
-  categorize_and_plot_genes(string_results, pubmed_search_results, file_directory, export, threshold_percentage)
+  plot_connectivity_precedence(combined_summary, file_directory, export)
 
   log_message("FINISHED: Analysis pipeline completed")
 

@@ -1,4 +1,3 @@
-# Import required functions and operators
 #' @importFrom dplyr left_join mutate arrange desc row_number select filter case_when all_of across
 #' @importFrom ggplot2 aes geom_point geom_text scale_color_manual theme_minimal labs theme element_text element_blank element_line element_rect ggplot
 #' @importFrom ggrepel geom_text_repel
@@ -24,9 +23,10 @@ utils::globalVariables(c(
 #' @param file_directory Directory for saving the output summary. Defaults to NULL.
 #' @param export_format Format for export, either "csv", "tsv", or "excel".
 #' @param export Logical indicating whether to export the summary. Defaults to FALSE.
+#' @param threshold_percentage Percentage threshold for ranking (default is 20%).
 #' @return A data frame with combined summary.
 #' @export
-combine_summary <- function(pubmed_search_results, string_results, file_directory = NULL, export_format = "csv", export = FALSE) {
+combine_summary <- function(pubmed_search_results, string_results, file_directory = NULL, export_format = "csv", export = FALSE, threshold_percentage = 20) {
   current_date <- Sys.Date()
   formatted_date <- format(current_date, "%m.%d.%Y")
 
@@ -59,6 +59,16 @@ combine_summary <- function(pubmed_search_results, string_results, file_director
     return(combined_summary)
   }
 
+  top_threshold <- ceiling(nrow(combined_summary) * (threshold_percentage / 100))
+  bottom_threshold <- nrow(combined_summary) - top_threshold + 1
+
+  combined_summary <- combined_summary %>%
+    mutate(Category = case_when(
+      Connectivity_Rank <= top_threshold & PubMed_Rank <= top_threshold ~ "High Connectivity - High Precedence",
+      Connectivity_Rank <= top_threshold & PubMed_Rank >= bottom_threshold ~ "High Connectivity - Low Precedence",
+      TRUE ~ "Other"
+    ))
+
   if (export && !is.null(file_directory)) {
     if (export_format == "csv") {
       summary_filename <- paste(formatted_date, "Combined_Summary.csv", sep = "_")
@@ -84,47 +94,27 @@ combine_summary <- function(pubmed_search_results, string_results, file_director
   return(invisible(combined_summary))
 }
 
-#' Categorize and Plot Genes
+#' Plot Connectivity vs. Precedence
 #'
-#' Categorize genes and create a scatter plot of Connectivity Rank vs. PubMed Rank.
+#' Create a scatter plot of Connectivity Rank vs. PubMed Rank.
 #'
-#' @param string_results Data frame with STRING metrics.
-#' @param pubmed_search_results Data frame with PubMed search results.
+#' @param combined_summary Data frame with combined summary including categories.
 #' @param file_directory Directory for saving the output plot. Defaults to NULL.
 #' @param export Logical indicating whether to export the plot. Defaults to FALSE.
-#' @param threshold_percentage Percentage threshold for ranking (default is 20%).
 #' @export
-categorize_and_plot_genes <- function(string_results, pubmed_search_results, file_directory = NULL, export = FALSE, threshold_percentage = 20) {
-  if (nrow(string_results) == 0 || nrow(pubmed_search_results) == 0) {
-    warning("Not enough data to categorize and plot genes.")
+plot_connectivity_precedence <- function(combined_summary, file_directory = NULL, export = FALSE) {
+  if (nrow(combined_summary) == 0) {
+    warning("Not enough data to plot genes.")
     return(NULL)
   }
 
   current_date <- Sys.Date()
   formatted_date <- format(current_date, "%m.%d.%Y")
 
-  combined_string_results <- string_results %>%
-    left_join(select(pubmed_search_results, Gene, PubMed_Rank = PubMed_Rank), by = c("Gene_Symbol" = "Gene"))
-
-  if (!("Gene_Symbol" %in% colnames(combined_string_results)) || !("PubMed_Rank" %in% colnames(combined_string_results))) {
-    warning("Gene_Symbol or PubMed_Rank columns missing after join.")
-    return(NULL)
-  }
-
-  top_threshold <- ceiling(nrow(combined_string_results) * (threshold_percentage / 100))
-  bottom_threshold <- nrow(combined_string_results) - top_threshold + 1
-
-  combined_string_results <- combined_string_results %>%
-    mutate(Category = case_when(
-      Connectivity_Rank <= top_threshold & PubMed_Rank <= top_threshold ~ "High Connectivity - High Precedence",
-      Connectivity_Rank <= top_threshold & PubMed_Rank >= bottom_threshold ~ "High Connectivity - Low Precedence",
-      TRUE ~ "Other"
-    ))
-
-  plot <- ggplot(combined_string_results, aes(x = Connectivity_Rank, y = PubMed_Rank, color = Category)) +
+  plot <- ggplot(combined_summary, aes(x = Connectivity_Rank, y = PubMed_Rank, color = Category)) +
     geom_point(alpha = 1) +
     scale_color_manual(values = c("High Connectivity - High Precedence" = "navy", "High Connectivity - Low Precedence" = "red", "Other" = "black")) +
-    geom_text_repel(data = combined_string_results %>% filter(Category != "Other"), aes(label = Gene_Symbol, color = Category), size = 3, show.legend = FALSE, max.overlaps = 20) +
+    geom_text_repel(data = combined_summary %>% filter(Category != "Other"), aes(label = Gene, color = Category), size = 3, show.legend = FALSE, max.overlaps = 20) +
     theme_minimal() +
     labs(title = "Connectivity vs. Precedence",
          x = "Connectivity Rank",

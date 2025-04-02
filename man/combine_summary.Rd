@@ -9,7 +9,8 @@ combine_summary(
   string_results,
   file_directory = NULL,
   export_format = "csv",
-  export = FALSE
+  export = FALSE,
+  threshold_percentage = 20
 )
 }
 \arguments{
@@ -22,6 +23,8 @@ combine_summary(
 \item{export_format}{Format for export, either "csv", "tsv", or "excel".}
 
 \item{export}{Logical indicating whether to export the summary. Defaults to FALSE.}
+
+\item{threshold_percentage}{Percentage threshold for ranking (default is 20\%).}
 }
 \value{
 A data frame with combined summary.
