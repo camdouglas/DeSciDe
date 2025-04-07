@@ -13,6 +13,13 @@ Features
 
 Installation
 ------------
+Before installing the `DeSciDe` package, make sure you have `BiocManager` installed:
+
+    # Install Bioconductor dependencies
+    if (!requireNamespace("BiocManager", quietly = TRUE))
+        install.packages("BiocManager")
+    BiocManager::install("STRINGdb")
+    BiocManager::install("ComplexHeatmap")
 
 You can install the development version of DeSciDe from GitHub using the `devtools` package:
 
