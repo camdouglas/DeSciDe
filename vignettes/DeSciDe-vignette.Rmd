@@ -1,0 +1,260 @@
+---
+title: "DeSciDe-vignette"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{DeSciDe-vignette}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(DeSciDe)
+```
+
+# DeSciDe (Deciphering Scientific Discoveries)
+
+DeSciDe is a package designed to help streamline omics data analysis. Many methods of data analysis exist for the generation and characterization of gene lists, however, selection of genes for further investigation is still heavily influenced by prior knowledge, with practitioners often studying well characterized genes, reinforcing bias in the literature. This package aims to aid in the identification of both well-studied, high-confidence hits as well as novel hits that may be overlooked due to lack of prior literature precedence.
+
+This package takes a curated list of genes from a user's omics dataset and a list of cellular stimuli or cellular contexts pertaining to the experiment at hand. The list of genes is searched in the STRING database, and informative metrics are calculated and used to rank the gene list by network connectivity. Then the genes list and terms list are searched for co-occurrence of each gene and search term combination to identify the literature precedence of each gene in the context of the search terms provided. The PubMed results are then used to rank the genes list by number of publications associated with the search terms.
+
+The two ranks for each gene are then plotted on a scatter plot to visualize the relationship of the genes' literature precedence and network connectivity. This visual aid can be used to identify highly connected, well-studied genes that serve as high confidence hits clustered around the origin and highly connected, low precedence genes that serve as novel hits clustered in the top left of the graph. The highly connected, low precedence genes are known to interact with the other genes in the list, but have not been studied in the same experimental context, providing novel targets to pursue for follow up studies.
+
+Additional graphical outputs are generated to visualize the STRING network and PubMed results. The package has also been set up to allow the user to change various steps of the analysis to fit their needs, such as searching STRING for all connections or just physical, adjusting the threshold of classification of genes, exporting figures and data tables for use in publications. Below, we highlight how to implement DeSciDe to study an example data set.
+
+## Example Usage of DeSciDe
+
+For the following examples we will use a list of 40 genes and 3 search terms. We will call these lists "genes" and "terms". Here we import the lists from CSV files, however the user can choose to manually create these lists or import how they see best fit.
+
+```{r, error=FALSE}
+# Import genes list and terms list from CSV
+
+genes <- read.csv("genes.csv", header = FALSE)[[1]]
+
+terms <- read.csv("terms.csv", header = FALSE)[[1]]
+```
+
+We now have a list of our genes and terms to execute in our code:
+
+```{r}
+genes
+```
+
+```{r}
+terms
+```
+
+We can now run DeSciDe on this list in the most simple form. This will produce our figures and our data table of results.
+
+```{r plot_chunk, fig.width=8, fig.height=6, message=FALSE, warning=FALSE}
+
+results <- descide(genes_list = genes, terms_list = terms)
+```
+
+## Modifications to DeSciDe Search
+
+### [PubMed Ranking Method: Important]{.underline}
+
+By default, the PubMed search results are sorted for ranking in order of the terms provided. Here we gave "Acidic Patch " first, so the table is sorted with preference for "Acidic Patch" and then sorted by "Chromatin" and finally by "Nucleosome". You can see that this results in CHD4 being ranked as lower precedence that SUV420H1 even though it has more publications in both the chromatin and nucleosome searches. You must be aware of this when creating your search term list. This weighting has been incorporated to help users emphasize terms highly specific to their research that may have significantly lower number of results than a broader term incorporated into the search (i.e. Chromatin in our search).
+
+If a user does not want to weight their search to a specific term, they can use the argument `rank_method = "total"` to rank the genes by the sum of publication numbers across each search term.
+
+```{r message=FALSE, fig.width=8, fig.height=6,}
+results_total <- descide(genes_list = genes, terms_list = terms, rank_method = "total")
+```
+
+Observe the changes in the PubMed rankings and the Heatmap as as a result of weighting by "total". SUV420H1 is dropped from rank 2 down to 13 as a result of the change in weighting. It is important for users to be aware of the differences in these two methods. Both methods, weighted or total, can provide valuable insight into a data set, but the user needs to be conscientious of which method is going to best serve their purpose.
+
+```{r}
+head(results$summary_results)
+```
+
+```{r}
+head(results_total$summary_results)
+```
+
+The more specific and niche the search terms are, the more likely you will want to use weighted. In the example here, "Acidic Patch" is a specific term that does not appear in many publications in combination with the provided gene list. The experiment associated with this dataset was studying mutations to the acidic patch of histone H2A, so as a primary variable in the experiment it is valuable to weight the results to this term, to ensure that the variables of the system (WT or mutants of histone H2A acidic patch) would be represented in DeSciDe's results. Searching by total, however, can provide a good starting place for analysis when a user is not sure what terms to prioritize or does not yet know what precedence there is among their gene list for the terms they include.
+
+### [Modifications to STRING Search]{.underline}
+
+When searching the STRING database for gene interactions, there are a variety of variable that can be adjusted. These variable modifications have been included in DeSciDe's usage. First is the specification of the species of interest. The package defaults to search for human genes, but this can be changed by the user with argument `species =` as shown below:\
+
+```{r, eval=FALSE, fig.width=8, fig.height=6,}
+
+# Change species to mus musculus for STRING search.
+descide(genes_list = genes, terms_list = terms, species = 10090)
+
+```
+
+Additionally, STRING creates scores for each interaction that occurs within a network. This score can be adjusted to increase or decrease the confidence in interactions. High confidence interactions have a score of 1000 and low confidence interactions have a score of 0. The default score for STRING is 400, which is the default used within DeSciDe. To change the STRING score minimum value, the user can use the argument `score_threshold =`:
+
+```{r, eval=FALSE, fig.width=8, fig.height=6,}
+
+# Change STRING score threshold to 600.
+descide(genes_list = genes, terms_list = terms, score_threshold = 600)
+```
+
+The last variable that can be changed within DeSciDe to modify the STRING search is modifying the network type. By default DeSciDe uses a full network search. The full network includes all functional relationships between genes/proteins whether they directly interact or are related to each other for other reasons such as homology, gene ontology, etc. The other option is to limit the network to explicitly physical interactions. This parameter can be changed within DeSciDe by using the argument `network_type =`:
+
+```{r, eval=FALSE, fig.width=8, fig.height=6,}
+
+# Change STRING network type to only include physical interactions.
+descide(genes_list = genes, terms_list = terms, network_type = "physical")
+```
+
+We can run just the STRING search to see the differences in the network produced by using full or physical network. Wiith the full network, we see many more interactions between genes:
+
+```{r, warning=FALSE, fig.width=8, fig.height=6,}
+# Run STRING search and display network with full network.
+
+full_string <- search_string_db(genes_list = genes, network_type = "full")
+plot_string_network(full_string$string_db, full_string$string_ids)
+```
+
+With the more stringent physical network, we see fewer interactions.
+
+```{r, warning=FALSE, fig.width=8, fig.height=6,}
+# Run STRING search and display network with physical network. 
+
+physical_string <- search_string_db(genes_list = genes, network_type = "physical")
+
+plot_string_network(physical_string$string_db, physical_string$string_ids)
+```
+
+### [Modifications to DeSciDe Classifications]{.underline}
+
+The rank list of PubMed and STRING results are combined into a summary file. These ranks are then used to classify the genes as either high connectivity - high precedence (high confidence genes) or high connectivity - low precedence (novel genes). The classification is conducted by setting thresholds based on the length of the gene list. The default threshold is 20%. High connectivity - high precedence genes are those that fall in the 20th percentile of both pubmed and string ranks (i.e. for a list of 100 genes, these are genes ranked 1-20). High connectivity - low precedence genes are those that rank in the 20th percentile for STRING rank and the 80-100th percentile for PubMed results (i.e. ranks 81-100 in a list of 100 genes). This value can be adjusted by the user to make the classification more or less stringent by using the argument `threshold_percentage =`.
+
+To change the threshold percentage in the complete DeSciDe pipeline:
+
+```{r, eval=FALSE, fig.width=8, fig.height=6}
+# Command to adjust threshold_percentage for full descide pipeline. 
+results <- descide(genes_list = genes, terms_list = terms, threshold_percentage = 50)
+```
+
+We can compare the 20% and 50% threshold results by running just the `combine_summary()` and `plot_connectivity_precedence()` functions:
+
+```{r, fig.width=8, fig.height=6}
+# Calculate and plot threshold of 20%.
+threshold_20 <- combine_summary(pubmed_search_results =  results$pubmed_results, string_results = results$string_results, threshold_percentage = 20)
+
+plot_connectivity_precedence(combined_summary = threshold_20)
+```
+
+```{r, fig.width=8, fig.height=6}
+# Calculate and plot threshold of 50%.
+threshold_50 <- combine_summary(pubmed_search_results =  results$pubmed_results, string_results = results$string_results, threshold_percentage = 50)
+
+plot_connectivity_precedence(combined_summary = threshold_50)
+```
+
+```{r}
+head(threshold_20)
+
+head(threshold_50)
+```
+
+This change to threshold percentage just modifies the annotation of genes in the category column of the summary results and the annotations of the genes on the scatter plot of connectivity vs precedence. Using higher threshold can help get a better visual idea of where more genes fall in the analysis, but lowering the threshold can help narrow in on select genes to conduct follow up experiments on.
+
+### [Exporting Tables and Graphs]{.underline}
+
+For ease of use, we have incorporated a feature to easily export all of the tables and graphs to the users desired destination. To do this, you can use the arguments `export = TRUE` and `file_directory = "your/desired/directory"` to export to your desired directory. Furthermore, you can specify the format of the tables using `export_format =`, which you can specify as "csv", "tsv", or "excel". Here is an example of running the full DeSciDe pipeline to be exported:\
+\
+
+```{r, eval=FALSE,fig.width=8, fig.height=6}
+# Code to run DeSciDe and export all plots and tables to desired directory.
+descide(genes_list = genes, terms_list = terms, export = TRUE, file_directory = "your/desired/directory", export_format = "excel")
+```
+
+## 
+
+## All Functions Available for DeSciDe
+
+Each step of DeSciDe can be run individually if you wish to do so. Below we briefly list each function and all of their arguments. To see more information, you can use the help function in R studio to see the R documentation for each function (i.e. `?descide` or `?plot_connectivity_precedence`)
+
+### Function to run entire pipeline
+
+```{r, eval=FALSE}
+descide(
+  genes_list,
+  terms_list,
+  rank_method = "weighted",
+  species = 9606,
+  network_type = "full",
+  score_threshold = 400,
+  threshold_percentage = 20,
+  export = FALSE,
+  file_directory = NULL,
+  export_format = "csv"
+)
+```
+
+### Function to run PubMed search
+
+```{r, eval=FALSE}
+search_pubmed(genes_list, terms_list, rank_method = "weighted")
+```
+
+### Function to plot heatmap
+
+```{r, eval=FALSE}
+plot_heatmap(pubmed_search_results, file_directory = NULL, export = FALSE)
+```
+
+### Function to search STRING
+
+```{r, eval=FALSE}
+search_string_db(
+  genes_list,
+  species = 9606,
+  network_type = "full",
+  score_threshold = 400
+)
+```
+
+### Function to plot STRING network
+
+```{r, eval=FALSE}
+plot_string_network(
+  string_db,
+  string_ids,
+  file_directory = NULL,
+  export = FALSE
+)
+```
+
+### Function to plot STRING clustering metrics
+
+```{r, eval=FALSE}
+plot_clustering(string_results, file_directory = NULL, export = FALSE)
+
+```
+
+### Function to create summary file and classify genes based on ranks.
+
+```{r, eval=FALSE}
+combine_summary(
+  pubmed_search_results,
+  string_results,
+  file_directory = NULL,
+  export_format = "csv",
+  export = FALSE,
+  threshold_percentage = 20
+)
+```
+
+### Function to plot connectivity vs. precedence.
+
+```{r, eval=FALSE}
+plot_connectivity_precedence(
+  combined_summary,
+  file_directory = NULL,
+  export = FALSE
+)
+```
