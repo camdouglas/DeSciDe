@@ -150,11 +150,13 @@ plot_clustering <- function(string_results, file_directory = NULL, export = FALS
 
   log_message("Inside plot_clustering function")
 
-  if (!all(c("Degree", "Clustering_Coefficient_Percent") %in% colnames(string_results))) {
+  # Check for null or missing columns
+  if (is.null(string_results) || !("Degree" %in% names(string_results)) || !("Clustering_Coefficient_Percent" %in% names(string_results))) {
     warning("Essential columns missing in string_results")
     return(NULL)
   }
 
+  # Check for empty data frame
   if (nrow(string_results) == 0) {
     warning("No data available for clustering plot.")
     return(NULL)

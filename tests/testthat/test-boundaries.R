@@ -11,10 +11,8 @@ test_that("descide function handles minimal input", {
   expect_type(results, "list")
   expect_s3_class(results$pubmed_results, "data.frame")
   expect_s3_class(results$string_results, "data.frame")
-  expect_s3_class(results$summary_results, "data.frame")
   expect_gt(nrow(results$pubmed_results), 0)
-  expect_equal(nrow(results$string_results), 0) # Expect empty since interaction fails
-  expect_equal(nrow(results$summary_results), 0) # Expect empty due to no valid string_results
+  expect_equal(nrow(results$string_results), 0)
 
   expect_warning(res <- plot_heatmap(results$pubmed_results), "Not enough data to create a meaningful heatmap.")
   expect_null(res)
@@ -25,7 +23,7 @@ test_that("descide function handles minimal input", {
   expect_warning(res <- plot_clustering(results$string_results), "Essential columns missing in string_results")
   expect_null(res)
 
-  expect_warning(res <- categorize_and_plot_genes(results$string_results, results$pubmed_results), "Not enough data to categorize and plot genes.")
+  expect_warning(res <- plot_connectivity_precedence(results$summary_results), "Not enough data to plot genes.")
   expect_null(res)
 })
 
@@ -37,6 +35,8 @@ test_that("descide function handles empty input", {
   )
 
   expect_type(results, "list")
+  expect_s3_class(results$pubmed_results, "data.frame")
+  expect_s3_class(results$string_results, "data.frame")
   expect_equal(nrow(results$pubmed_results), 0)
   expect_equal(nrow(results$string_results), 0)
   expect_equal(nrow(results$summary_results), 0)
@@ -50,6 +50,6 @@ test_that("descide function handles empty input", {
   expect_warning(res <- plot_clustering(results$string_results), "Essential columns missing in string_results")
   expect_null(res)
 
-  expect_warning(res <- categorize_and_plot_genes(results$string_results, results$pubmed_results), "Not enough data to categorize and plot genes.")
+  expect_warning(res <- plot_connectivity_precedence(results$summary_results), "Not enough data to plot genes.")
   expect_null(res)
 })

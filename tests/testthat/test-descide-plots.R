@@ -57,17 +57,13 @@ test_that("plotting functions execute without error", {
     export = FALSE
   )
 
-  # Debug: Inspect results for string_db and string_ids
-  print(str(results$string_db))
-  print(str(results$string_ids))
-
   # Ensure plot functions execute without error
   expect_no_error(plot_heatmap(results$pubmed_results))
   expect_no_error({
-    if (is.list(results$string_db)){
+    if (!is.null(results$string_ids) && length(results$string_ids) > 0){
       plot_string_network(results$string_db, results$string_ids)
     }
   })
   expect_no_error(plot_clustering(results$string_results))
-  expect_no_error(categorize_and_plot_genes(results$string_results, results$pubmed_results))
+  expect_no_error(plot_connectivity_precedence(results$summary_results))
 })
