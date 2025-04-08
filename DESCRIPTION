@@ -4,7 +4,7 @@ Title: DeSciDe: A Tool for Unbiased Literature Searching and Gene List Curation
 Version: 1.0.0
 Authors@R: 
     person("Cameron", "Douglas", email = "camerondouglas@ufl.edu", role = c("aut", "cre"), comment = c(ORCID = "0000-0003-2334-1652"))
-Description: 'DeSciDe' (Deciphering Scientific Discoveries) is an R package designed for genomic and proteomic data analysis, enabling unbiased PubMed searching, protein interaction network visualization, and comprehensive data summarization.This package aims to help users identify novel targets within their data sets based on protein network interactions and publication precedence of target's assoication with research context based on literature precedence. 
+Description: 'DeSciDe' (Deciphering Scientific Discoveries) is an R package designed for genomic and proteomic data analysis, enabling unbiased PubMed searching, protein interaction network visualization, and comprehensive data summarization.This package aims to help users identify novel targets within their data sets based on protein network interactions and publication precedence of target's association with research context based on literature precedence. 
 License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
