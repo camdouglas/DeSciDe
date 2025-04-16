@@ -65,6 +65,13 @@ Below is a basic example of how to use DeSciDe to analyze a list of genes and te
 - `file_directory`: Directory for saving the output files. Defaults to NULL.
 - `export_format`: Format for export ("csv", "tsv", "excel"). Defaults to "csv".
 
+### Testing
+Due to API rate limits and the potentially long duration of some tests, certain tests are skipped on CRAN using the skip_on_cran() function from the testthat package. These tests are designed to run in local environments and CI/CD pipelines where the environment variable NOT_CRAN is set to "true".
+
+To run all tests locally, set the environment variable as follows:
+
+    NOT_CRAN=true R CMD check
+
 Authors
 -------
 
