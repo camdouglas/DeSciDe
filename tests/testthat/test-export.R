@@ -3,6 +3,8 @@ library(DeSciDe)
 library(withr)
 
 test_that("descide function exports correctly", {
+  skip_on_cran()  # Skipping this test on CRAN
+
   genes_list <- c("JUN", "MYC", "HDAC1", "TRIM33")
   terms_list <- c("cancer", "romidepsin")
   current_date <- format(Sys.Date(), "%m.%d.%Y")

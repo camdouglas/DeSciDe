@@ -2,6 +2,8 @@ library(testthat)
 library(DeSciDe)
 
 test_that("descide function handles minimal input", {
+  skip_on_cran()  # Skipping this test on CRAN
+
   results <- descide(
     genes_list = c("MYC"),
     terms_list = c("cancer"),
@@ -28,6 +30,8 @@ test_that("descide function handles minimal input", {
 })
 
 test_that("descide function handles empty input", {
+  skip_on_cran()  # Skipping this test on CRAN
+
   results <- descide(
     genes_list = character(0),
     terms_list = character(0),

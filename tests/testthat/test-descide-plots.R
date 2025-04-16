@@ -4,6 +4,8 @@ library(DeSciDe)
 library(withr)
 
 test_that("descide function works correctly without export", {
+  skip_on_cran()  # Skipping this test on CRAN
+
   # Define the genes and terms lists
   genes_list <- c("JUN", "MYC", "HDAC1", "TRIM33")
   terms_list <- c("cancer", "romidepsin")
@@ -46,6 +48,8 @@ test_that("descide function works correctly without export", {
 })
 
 test_that("plotting functions execute without error", {
+  skip_on_cran()  # Skipping this test on CRAN
+
   # Define genes and terms lists
   genes_list <- c("JUN", "MYC", "HDAC1", "TRIM33")
   terms_list <- c("cancer", "romidepsin")
