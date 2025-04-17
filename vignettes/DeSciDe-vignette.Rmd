@@ -26,8 +26,6 @@ eval_flag <- Sys.getenv("NOT_CRAN") == "TRUE"
 if(!eval_flag) {
   load("data/results_default.RData")
   load("data/results_total.RData")
-  load("data/full_string.RData")
-  load("data/physical_string.RData")
   load("data/threshold_50.RData")
   load("data/threshold_20.RData")
 }
@@ -74,7 +72,6 @@ results <- descide(genes_list = genes, terms_list = terms)
 ```{r, include = FALSE, eval=!eval_flag}
 # Load precomputed results
 results <- results_default
-full_string <- full_string
 ```
 ##### Table
 ```{r, fig.width=8, fig.height=6, echo = FALSE}
@@ -88,7 +85,7 @@ plot_heatmap(results$pubmed_results)
 
 ##### STRING Network
 ```{r, fig.width=8, fig.height=6, echo = FALSE}
-plot_string_network(full_string$string_db, full_string$string_ids)
+knitr::include_graphics("data/Network_full.pdf")
 ```
 
 ##### Clustering
@@ -161,13 +158,8 @@ full_string <- search_string_db(genes_list = genes, network_type = "full")
 plot_string_network(full_string$string_db, full_string$string_ids)
 ```
 
-```{r, include=FALSE, eval=!eval_flag}
-# Load precomputed results for full network
-full_string <- full_string
-```
-
-```{r, warning=FALSE, fig.width=8, fig.height=6}
-plot_string_network(full_string$string_db, full_string$string_ids)
+```{r, warning=FALSE, fig.width=8, fig.height=6, echo=FALSE, eval=!eval_flag}
+knitr::include_graphics("data/Network_full.pdf")
 ```
 
 With the more stringent physical network, we see fewer interactions.
@@ -178,13 +170,8 @@ physical_string <- search_string_db(genes_list = genes, network_type = "physical
 plot_string_network(physical_string$string_db, physical_string$string_ids)
 ```
 
-```{r, include=FALSE, eval=!eval_flag}
-# Load precomputed results for physical network
-physical_string <- physical_string
-```
-
-```{r, warning=FALSE, fig.width=8, fig.height=6}
-plot_string_network(physical_string$string_db, physical_string$string_ids)
+```{r, warning=FALSE, fig.width=8, fig.height=6, echo=FALSE, eval=!eval_flag}
+knitr::include_graphics("data/Network_physical.pdf")
 ```
 
 ### [Modifications to DeSciDe Classifications]{.underline}
