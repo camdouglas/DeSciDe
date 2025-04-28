@@ -45,8 +45,10 @@ A list containing the PubMed search results, STRING results, and summary results
 Run the entire analysis pipeline including PubMed search, STRING database search, and plotting.
 }
 \examples{
+\donttest{
 genes <- c("TP53", "BRCA1")
 terms <- c("cancer", "tumor")
 results <- descide(genes, terms, export = FALSE)
 str(results)
+}
 }

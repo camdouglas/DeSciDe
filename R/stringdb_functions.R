@@ -29,10 +29,12 @@ utils::globalVariables(c(
 #'     \item{string_ids}{The STRING IDs for the input genes.}
 #'   }
 #' @examples
+#' \dontrun{
 #' library(STRINGdb)
 #' genes <- c("TP53", "BRCA1")
 #' results <- search_string_db(genes)
 #' print(results)
+#' }
 #' @export
 search_string_db <- function(genes_list, species = 9606, network_type = "full", score_threshold = 400) {
   if (length(genes_list) == 0) {

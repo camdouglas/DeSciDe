@@ -17,10 +17,12 @@ NULL
 #' @param export_format Format for export, either "csv", "tsv", or "excel".
 #' @return A list containing the PubMed search results, STRING results, and summary results.
 #' @examples
+#' \donttest{
 #' genes <- c("TP53", "BRCA1")
 #' terms <- c("cancer", "tumor")
 #' results <- descide(genes, terms, export = FALSE)
 #' str(results)
+#' }
 #' @export
 descide <- function(genes_list, terms_list,
                     rank_method = "weighted",

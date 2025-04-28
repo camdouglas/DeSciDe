@@ -32,8 +32,10 @@ A list containing the following elements:
 Search the STRING database for protein interactions.
 }
 \examples{
+\dontrun{
 library(STRINGdb)
 genes <- c("TP53", "BRCA1")
 results <- search_string_db(genes)
 print(results)
+}
 }
