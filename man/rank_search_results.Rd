@@ -11,11 +11,20 @@ rank_search_results(data, terms_list, rank_method = "weighted")
 
 \item{terms_list}{A list of search terms.}
 
-\item{rank_method}{The method to rank pubmed results, either "weighted" or "total". Weighted ranks results based on order of terms inputed. Total ranks results on total sum of publications across all search term combinations. Defaults to "weighted".}
+\item{rank_method}{The method to rank pubmed results, either "weighted" or "total". Weighted ranks results based on order of terms inputted. Total ranks results on total sum of publications across all search term combinations. Defaults to "weighted".}
 }
 \value{
-A data frame with ranked search results.
+A data frame with ranked search results, which includes the genes and their corresponding ranks based on the search method.
 }
 \description{
 Rank search results based on a chosen method.
+}
+\examples{
+# Example data frame
+data <- data.frame(Gene = c("Gene1", "Gene2"),
+                   Term1 = c(10, 20),
+                   Term2 = c(5, 15))
+terms_list <- c("Term1", "Term2")
+ranked_results <- rank_search_results(data, terms_list, rank_method = "weighted")
+print(ranked_results)
 }

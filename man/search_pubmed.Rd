@@ -4,7 +4,7 @@
 \alias{search_pubmed}
 \title{Search PubMed with Multiple Genes and Terms}
 \usage{
-search_pubmed(genes_list, terms_list, rank_method = "weighted")
+search_pubmed(genes_list, terms_list, rank_method = "weighted", verbose = TRUE)
 }
 \arguments{
 \item{genes_list}{A list of gene IDs.}
@@ -12,10 +12,18 @@ search_pubmed(genes_list, terms_list, rank_method = "weighted")
 \item{terms_list}{A list of search terms.}
 
 \item{rank_method}{The method to rank results, either "weighted" or "total". Defaults to "weighted".}
+
+\item{verbose}{Logical flag indicating whether to display messages. Default is TRUE.}
 }
 \value{
-A data frame with search results.
+A data frame with search results, including genes, terms, and their corresponding publication counts and ranks.
 }
 \description{
 Perform a PubMed search for multiple genes and terms.
+}
+\examples{
+genes <- c("TP53", "BRCA1")
+terms <- c("cancer", "tumor")
+search_results <- search_pubmed(genes, terms, rank_method = "weighted", verbose = FALSE)
+print(search_results)
 }

@@ -12,8 +12,13 @@ single_pubmed_search(gene, term)
 \item{term}{A character string representing the search term.}
 }
 \value{
-An integer representing the number of PubMed articles found.
+An integer representing the number of PubMed articles found from the search query in PubMed.
 }
 \description{
 Perform a PubMed search for a given gene and term.
+}
+\examples{
+# Perform a PubMed search for gene 'TP53' with term 'cancer'
+result <- single_pubmed_search("TP53", "cancer")
+print(result)
 }

@@ -17,7 +17,11 @@ utils::globalVariables(c(
 #'
 #' @param gene A character string representing the gene symbol.
 #' @param term A character string representing the search term.
-#' @return An integer representing the number of PubMed articles found.
+#' @return An integer representing the number of PubMed articles found from the search query in PubMed.
+#' @examples
+#' # Perform a PubMed search for gene 'TP53' with term 'cancer'
+#' result <- single_pubmed_search("TP53", "cancer")
+#' print(result)
 #' @export
 single_pubmed_search <- function(gene, term) {
   query <- paste0('"', gene, "[TIAB]\"", " AND ", '"', term, "[TIAB]\"")
@@ -31,8 +35,16 @@ single_pubmed_search <- function(gene, term) {
 #'
 #' @param data A data frame containing search results.
 #' @param terms_list A list of search terms.
-#' @param rank_method The method to rank pubmed results, either "weighted" or "total". Weighted ranks results based on order of terms inputed. Total ranks results on total sum of publications across all search term combinations. Defaults to "weighted".
-#' @return A data frame with ranked search results.
+#' @param rank_method The method to rank pubmed results, either "weighted" or "total". Weighted ranks results based on order of terms inputted. Total ranks results on total sum of publications across all search term combinations. Defaults to "weighted".
+#' @return A data frame with ranked search results, which includes the genes and their corresponding ranks based on the search method.
+#' @examples
+#' # Example data frame
+#' data <- data.frame(Gene = c("Gene1", "Gene2"),
+#'                    Term1 = c(10, 20),
+#'                    Term2 = c(5, 15))
+#' terms_list <- c("Term1", "Term2")
+#' ranked_results <- rank_search_results(data, terms_list, rank_method = "weighted")
+#' print(ranked_results)
 #' @export
 rank_search_results <- function(data, terms_list, rank_method = "weighted") {
   if (rank_method == "weighted") {
@@ -60,7 +72,12 @@ rank_search_results <- function(data, terms_list, rank_method = "weighted") {
 #' @param terms_list A list of search terms.
 #' @param rank_method The method to rank results, either "weighted" or "total". Defaults to "weighted".
 #' @param verbose Logical flag indicating whether to display messages. Default is TRUE.
-#' @return A data frame with search results.
+#' @return A data frame with search results, including genes, terms, and their corresponding publication counts and ranks.
+#' @examples
+#' genes <- c("TP53", "BRCA1")
+#' terms <- c("cancer", "tumor")
+#' search_results <- search_pubmed(genes, terms, rank_method = "weighted", verbose = FALSE)
+#' print(search_results)
 #' @export
 search_pubmed <- function(genes_list, terms_list, rank_method = "weighted", verbose = TRUE) {
   single_search_results <- data.frame(Gene = character(), Term = character(), Count = integer())
