@@ -59,13 +59,17 @@ rank_search_results <- function(data, terms_list, rank_method = "weighted") {
 #' @param genes_list A list of gene IDs.
 #' @param terms_list A list of search terms.
 #' @param rank_method The method to rank results, either "weighted" or "total". Defaults to "weighted".
+#' @param verbose Logical flag indicating whether to display messages. Default is TRUE.
 #' @return A data frame with search results.
 #' @export
-search_pubmed <- function(genes_list, terms_list, rank_method = "weighted") {
+search_pubmed <- function(genes_list, terms_list, rank_method = "weighted", verbose = TRUE) {
   single_search_results <- data.frame(Gene = character(), Term = character(), Count = integer())
 
   for (gene in genes_list) {
     for (term in terms_list) {
+      if (verbose) {
+        message(paste("Searching PubMed for gene:", gene, "and term:", term))
+      }
       count <- single_pubmed_search(gene, term)
       single_search_results <- rbind(single_search_results, data.frame(Gene = gene, Term = term, Count = count))
     }
