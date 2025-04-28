@@ -13,6 +13,14 @@ plot_clustering(string_results, file_directory = NULL, export = FALSE)
 
 \item{export}{Logical indicating whether to export the plot. Defaults to FALSE.}
 }
+\value{
+Invisibly returns the ggplot object.
+}
 \description{
 Plot STRING interactions degree vs. clustering.
+}
+\examples{
+# Example data frame
+string_results <- data.frame(Degree = c(10, 5), Clustering_Coefficient_Percent = c(20, 10))
+plot_clustering(string_results, file_directory = tempdir(), export = FALSE)
 }

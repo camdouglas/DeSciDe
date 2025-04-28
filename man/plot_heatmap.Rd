@@ -13,6 +13,18 @@ plot_heatmap(pubmed_search_results, file_directory = NULL, export = FALSE)
 
 \item{export}{Logical indicating whether to export the plot. Defaults to FALSE.}
 }
+\value{
+Invisibly returns a \code{HeatmapList} object.
+}
 \description{
-Create and save (optional) a heatmap of the PubMed search results.
+Create and optionally save a heatmap of the PubMed search results.
+}
+\examples{
+# Example data frame
+data <- data.frame(Gene = c("Gene1", "Gene2"),
+                   Term1 = c(10, 20),
+                   Term2 = c(5, 15),
+                   Total = c(15, 35),
+                   PubMed_Rank = c(1, 2))
+plot_heatmap(data, file_directory = tempdir(), export = FALSE)
 }

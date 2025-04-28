@@ -21,8 +21,19 @@ search_string_db(
 \item{score_threshold}{The minimum score threshold for string interactions. Defaults to 400.}
 }
 \value{
-A list containing metrics, STRINGdb object, and STRING IDs.
+A list containing the following elements:
+\describe{
+\item{string_results}{A data frame with STRING interaction metrics.}
+\item{string_db}{The STRINGdb object used.}
+\item{string_ids}{The STRING IDs for the input genes.}
+}
 }
 \description{
 Search the STRING database for protein interactions.
+}
+\examples{
+library(STRINGdb)
+genes <- c("TP53", "BRCA1")
+results <- search_string_db(genes)
+print(results)
 }

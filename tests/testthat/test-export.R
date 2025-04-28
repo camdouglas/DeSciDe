@@ -10,13 +10,19 @@ test_that("descide function exports correctly", {
   current_date <- format(Sys.Date(), "%m.%d.%Y")
 
   tmp_dir <- local_tempdir()
-  results <- descide(
-    genes_list = genes_list,
-    terms_list = terms_list,
-    export = TRUE,
-    file_directory = tmp_dir,
-    export_format = "csv"
-  )
+
+  # Capture messages and warnings to check function execution
+  f_capture_output <- capture.output({
+    results <- suppressWarnings({
+      descide(
+        genes_list = genes_list,
+        terms_list = terms_list,
+        export = TRUE,
+        file_directory = tmp_dir,
+        export_format = "csv"
+      )
+    })
+  }, type = "message")
 
   # Check if the exported summary file exists
   expected_summary_file <- paste0(current_date, "_Combined_Summary.csv")
@@ -39,14 +45,21 @@ test_that("descide function exports correctly", {
   expect_true(file.exists(file.path(tmp_dir, expected_precedence_plot_file)))
 
   # Repeat the above tests for TSV and Excel export formats
+
   tmp_dir <- local_tempdir()
-  results <- descide(
-    genes_list = genes_list,
-    terms_list = terms_list,
-    export = TRUE,
-    file_directory = tmp_dir,
-    export_format = "tsv"
-  )
+
+  # Capture messages and warnings to check function execution
+  f_capture_output <- capture.output({
+    results <- suppressWarnings({
+      descide(
+        genes_list = genes_list,
+        terms_list = terms_list,
+        export = TRUE,
+        file_directory = tmp_dir,
+        export_format = "tsv"
+      )
+    })
+  }, type = "message")
 
   expected_summary_file <- paste0(current_date, "_Combined_Summary.tsv")
   expect_true(file.exists(file.path(tmp_dir, expected_summary_file)))
@@ -56,13 +69,19 @@ test_that("descide function exports correctly", {
   expect_true(file.exists(file.path(tmp_dir, expected_precedence_plot_file)))
 
   tmp_dir <- local_tempdir()
-  results <- descide(
-    genes_list = genes_list,
-    terms_list = terms_list,
-    export = TRUE,
-    file_directory = tmp_dir,
-    export_format = "excel"
-  )
+
+  # Capture messages and warnings to check function execution
+  f_capture_output <- capture.output({
+    results <- suppressWarnings({
+      descide(
+        genes_list = genes_list,
+        terms_list = terms_list,
+        export = TRUE,
+        file_directory = tmp_dir,
+        export_format = "excel"
+      )
+    })
+  }, type = "message")
 
   expected_summary_file <- paste0(current_date, "_Combined_Summary.xlsx")
   expect_true(file.exists(file.path(tmp_dir, expected_summary_file)))

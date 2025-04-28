@@ -12,11 +12,15 @@ test_that("descide function works correctly without export", {
 
   # Capture messages and warnings to check function execution
   f_capture_output <- capture.output({
-    results <- descide(
-      genes_list = genes_list,
-      terms_list = terms_list,
-      export = FALSE
-    )
+    f_capture_message <- capture.output({
+      results <- suppressWarnings({
+        descide(
+          genes_list = genes_list,
+          terms_list = terms_list,
+          export = FALSE
+        )
+      })
+    }, type = "message")
   })
 
   # Check that results is a list
@@ -37,14 +41,15 @@ test_that("descide function works correctly without export", {
   expect_gt(nrow(results$summary_results), 0)
 
   # Assert that certain output messages were printed during the plot functions
-  expect_true(any(grepl("Starting analysis pipeline", f_capture_output)))
-  expect_true(any(grepl("Plotting heatmap of PubMed search results", f_capture_output)))
-  expect_true(any(grepl("Performing STRING database search", f_capture_output)))
-  expect_true(any(grepl("Plotting STRING network interactions", f_capture_output)))
-  expect_true(any(grepl("Combining summaries", f_capture_output)))
-  expect_true(any(grepl("Plotting clustering coefficient", f_capture_output)))
-  expect_true(any(grepl("Categorizing and plotting genes", f_capture_output)))
-  expect_true(any(grepl("FINISHED: Analysis pipeline completed", f_capture_output)))
+  expect_true(any(grepl("Starting analysis pipeline", f_capture_message)))
+  expect_true(any(grepl("Performing PubMed search", f_capture_message)))
+  expect_true(any(grepl("Plotting heatmap of PubMed search results", f_capture_message)))
+  expect_true(any(grepl("Performing STRING database search", f_capture_message)))
+  expect_true(any(grepl("Plotting STRING network interactions", f_capture_message)))
+  expect_true(any(grepl("Combining summaries", f_capture_message)))
+  expect_true(any(grepl("Plotting clustering coefficient", f_capture_message)))
+  expect_true(any(grepl("Categorizing and plotting genes", f_capture_message)))
+  expect_true(any(grepl("FINISHED: Analysis pipeline completed", f_capture_message)))
 })
 
 test_that("plotting functions execute without error", {
@@ -54,12 +59,16 @@ test_that("plotting functions execute without error", {
   genes_list <- c("JUN", "MYC", "HDAC1", "TRIM33")
   terms_list <- c("cancer", "romidepsin")
 
-  # Run descide function
-  results <- descide(
-    genes_list = genes_list,
-    terms_list = terms_list,
-    export = FALSE
-  )
+  # Capture messages and warnings to check function execution
+  f_capture_output <- capture.output({
+    results <- suppressWarnings({
+      descide(
+        genes_list = genes_list,
+        terms_list = terms_list,
+        export = FALSE
+      )
+    })
+  }, type = "message")
 
   # Ensure plot functions execute without error
   expect_no_error(plot_heatmap(results$pubmed_results))

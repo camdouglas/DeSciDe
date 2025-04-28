@@ -27,8 +27,14 @@ combine_summary(
 \item{threshold_percentage}{Percentage threshold for ranking (default is 20\%).}
 }
 \value{
-A data frame with combined summary.
+A data frame with combined summary including connectivity, precedence, and category.
 }
 \description{
 Combine PubMed search summary and STRING gene metrics.
+}
+\examples{
+pubmed_data <- data.frame(Gene = c("Gene1", "Gene2"), PubMed_Rank = c(1, 2))
+string_data <- data.frame(Gene = c("Gene1", "Gene2"), Connectivity_Rank = c(2, 1))
+combined <- combine_summary(pubmed_data, string_data, export = FALSE)
+print(combined)
 }

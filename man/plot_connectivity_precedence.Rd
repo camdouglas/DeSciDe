@@ -17,6 +17,15 @@ plot_connectivity_precedence(
 
 \item{export}{Logical indicating whether to export the plot. Defaults to FALSE.}
 }
+\value{
+Invisibly returns a ggplot object.
+}
 \description{
 Create a scatter plot of Connectivity Rank vs. PubMed Rank.
+}
+\examples{
+combined_data <- data.frame(Gene = c("Gene1", "Gene2"), Connectivity_Rank = c(1, 2),
+                            PubMed_Rank = c(2, 1),
+                            Category = c("High Connectivity - High Precedence", "Other"))
+plot_connectivity_precedence(combined_data, export = FALSE)
 }

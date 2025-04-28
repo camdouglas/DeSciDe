@@ -22,7 +22,7 @@ descide(
 
 \item{terms_list}{A list of search terms.}
 
-\item{rank_method}{The method to rank pubmed results, either "weighted" or "total". Weighted ranks results based on order of terms inputed. Total ranks results on total sum of publications across all search term combinations. Defaults to "weighted".}
+\item{rank_method}{The method to rank pubmed results, either "weighted" or "total". Weighted ranks results based on order of terms inputted. Total ranks results on total sum of publications across all search term combinations. Defaults to "weighted".}
 
 \item{species}{The NCBI taxon ID of the species. Defaults to 9606 (Homo sapiens).}
 
@@ -43,4 +43,10 @@ A list containing the PubMed search results, STRING results, and summary results
 }
 \description{
 Run the entire analysis pipeline including PubMed search, STRING database search, and plotting.
+}
+\examples{
+genes <- c("TP53", "BRCA1")
+terms <- c("cancer", "tumor")
+results <- descide(genes, terms, export = FALSE)
+str(results)
 }

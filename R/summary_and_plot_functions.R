@@ -24,13 +24,19 @@ utils::globalVariables(c(
 #' @param export_format Format for export, either "csv", "tsv", or "excel".
 #' @param export Logical indicating whether to export the summary. Defaults to FALSE.
 #' @param threshold_percentage Percentage threshold for ranking (default is 20%).
-#' @return A data frame with combined summary.
+#' @return A data frame with combined summary including connectivity, precedence, and category.
+#' @examples
+#' pubmed_data <- data.frame(Gene = c("Gene1", "Gene2"), PubMed_Rank = c(1, 2))
+#' string_data <- data.frame(Gene = c("Gene1", "Gene2"), Connectivity_Rank = c(2, 1))
+#' combined <- combine_summary(pubmed_data, string_data, export = FALSE)
+#' print(combined)
 #' @export
 combine_summary <- function(pubmed_search_results, string_results, file_directory = NULL, export_format = "csv", export = FALSE, threshold_percentage = 20) {
   current_date <- Sys.Date()
   formatted_date <- format(current_date, "%m.%d.%Y")
 
   if (nrow(pubmed_search_results) == 0 && nrow(string_results) == 0) {
+    message("Both PubMed and STRING results are empty.")
     return(data.frame())
   }
 
@@ -43,19 +49,20 @@ combine_summary <- function(pubmed_search_results, string_results, file_director
   }
 
   if (nrow(pubmed_search_results) == 0) {
-    pubmed_search_results <- data.frame(Gene = character(0), stringsAsFactors = FALSE)
-    return(pubmed_search_results)
+    message("PubMed results are empty, returning empty data frame.")
+    return(data.frame())
   }
 
   if (nrow(string_results) == 0) {
-    string_results <- data.frame(Gene = character(0), stringsAsFactors = FALSE)
-    return(string_results)
+    message("STRING results are empty, returning empty data frame.")
+    return(data.frame())
   }
 
   combined_summary <- pubmed_search_results %>%
     left_join(string_results, by = "Gene")
 
   if (nrow(combined_summary) == 0) {
+    message("No matching genes found, returning empty data frame.")
     return(combined_summary)
   }
 
@@ -88,7 +95,7 @@ combine_summary <- function(pubmed_search_results, string_results, file_director
     } else {
       stop("Invalid export format. Choose 'csv', 'tsv', or 'excel'.")
     }
-    print(paste("Summary table exported to:", full_summary_path))
+    message(paste("Summary table exported to:", full_summary_path))
   }
 
   return(invisible(combined_summary))
@@ -101,11 +108,17 @@ combine_summary <- function(pubmed_search_results, string_results, file_director
 #' @param combined_summary Data frame with combined summary including categories.
 #' @param file_directory Directory for saving the output plot. Defaults to NULL.
 #' @param export Logical indicating whether to export the plot. Defaults to FALSE.
+#' @return Invisibly returns a ggplot object.
+#' @examples
+#' combined_data <- data.frame(Gene = c("Gene1", "Gene2"), Connectivity_Rank = c(1, 2),
+#'                             PubMed_Rank = c(2, 1),
+#'                             Category = c("High Connectivity - High Precedence", "Other"))
+#' plot_connectivity_precedence(combined_data, export = FALSE)
 #' @export
 plot_connectivity_precedence <- function(combined_summary, file_directory = NULL, export = FALSE) {
   if (nrow(combined_summary) == 0) {
     warning("Not enough data to plot genes.")
-    return(NULL)
+    return(invisible(NULL))
   }
 
   current_date <- Sys.Date()
@@ -138,7 +151,7 @@ plot_connectivity_precedence <- function(combined_summary, file_directory = NULL
     png(filename = full_rank_scatter_output_path, width = 1000, height = 800, res = 150)
     print(plot)
     dev.off()
-    print("Plot exported and device closed.")
+    message("Plot exported and device closed.")
   } else {
     print(plot)
   }

@@ -13,16 +13,25 @@ utils::globalVariables(c(
 
 #' Plot Heatmap
 #'
-#' Create and save (optional) a heatmap of the PubMed search results.
+#' Create and optionally save a heatmap of the PubMed search results.
 #'
 #' @param pubmed_search_results A data frame containing raw search results with genes and terms.
 #' @param file_directory Directory for saving the output plot. Defaults to NULL.
 #' @param export Logical indicating whether to export the plot. Defaults to FALSE.
+#' @return Invisibly returns a \code{HeatmapList} object.
+#' @examples
+#' # Example data frame
+#' data <- data.frame(Gene = c("Gene1", "Gene2"),
+#'                    Term1 = c(10, 20),
+#'                    Term2 = c(5, 15),
+#'                    Total = c(15, 35),
+#'                    PubMed_Rank = c(1, 2))
+#' plot_heatmap(data, file_directory = tempdir(), export = FALSE)
 #' @export
 plot_heatmap <- function(pubmed_search_results, file_directory = NULL, export = FALSE) {
   if (nrow(pubmed_search_results) == 0) {
     warning("No data available to plot heatmap.")
-    return(NULL)
+    return(invisible(NULL))
   }
 
   current_date <- Sys.Date()
@@ -35,7 +44,7 @@ plot_heatmap <- function(pubmed_search_results, file_directory = NULL, export = 
 
   if (nrow(heatmap_data) < 2) {
     warning("Not enough data to create a meaningful heatmap.")
-    return(NULL)
+    return(invisible(NULL))
   }
 
   # Convert data frame to matrix
@@ -43,19 +52,18 @@ plot_heatmap <- function(pubmed_search_results, file_directory = NULL, export = 
 
   if (all(is.na(heatmap_data))) {
     warning("No valid data points in heatmap data.")
-    return(NULL)
+    return(invisible(NULL))
   }
 
-  column_min <- apply(heatmap_data, 2, min, na.rm = TRUE)
   column_max <- apply(heatmap_data, 2, max, na.rm = TRUE)
 
-  if (all(column_min == column_max)) {
-    warning("heatmap_data has identical values in each column; unable to create meaningful color scale.")
-    return(NULL)
+  if (all(column_max == 0)) {
+    warning("heatmap_data has zero values in each column; unable to create meaningful color scale.")
+    return(invisible(NULL))
   }
 
   color_scales <- lapply(seq_len(ncol(heatmap_data)), function(i) {
-    colorRamp2(c(column_min[i], column_max[i]), c("white", "navy"))
+    colorRamp2(c(0, column_max[i]), c("white", "navy"))
   })
 
   heatmap_list <- HeatmapList()
@@ -80,7 +88,7 @@ plot_heatmap <- function(pubmed_search_results, file_directory = NULL, export = 
     png(filename = full_output_path, width = 800, height = 1200)
     draw(heatmap_list, column_title = "PubMed Search Results", column_title_gp = gpar(fontface = "bold", fontsize = 20))
     dev.off()
-    print(paste("Heatmap plot exported to:", full_output_path))
+    message("Heatmap plot exported to:", full_output_path)
   } else {
     draw(heatmap_list, column_title = "PubMed Search Results", column_title_gp = gpar(fontface = "bold", fontsize = 20))
   }

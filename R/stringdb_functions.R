@@ -22,7 +22,17 @@ utils::globalVariables(c(
 #' @param species The NCBI taxon ID of the species. Defaults to 9606 (Homo sapiens).
 #' @param network_type The type of network to use, either "full" or "physical". Defaults to "full".
 #' @param score_threshold The minimum score threshold for string interactions. Defaults to 400.
-#' @return A list containing metrics, STRINGdb object, and STRING IDs.
+#' @return A list containing the following elements:
+#'   \describe{
+#'     \item{string_results}{A data frame with STRING interaction metrics.}
+#'     \item{string_db}{The STRINGdb object used.}
+#'     \item{string_ids}{The STRING IDs for the input genes.}
+#'   }
+#' @examples
+#' library(STRINGdb)
+#' genes <- c("TP53", "BRCA1")
+#' results <- search_string_db(genes)
+#' print(results)
 #' @export
 search_string_db <- function(genes_list, species = 9606, network_type = "full", score_threshold = 400) {
   if (length(genes_list) == 0) {
@@ -32,7 +42,7 @@ search_string_db <- function(genes_list, species = 9606, network_type = "full", 
 
   string_db <- STRINGdb$new(species = species, score_threshold = score_threshold, input_directory = "", network_type = network_type, version = "12.0")
 
-  mapped_genes <- string_db$map(data.frame(gene = genes_list), "gene", takeFirst = TRUE, removeUnmappedRows = TRUE)
+  mapped_genes <- string_db$map(data.frame(gene = genes_list), "gene")
   if (nrow(mapped_genes) == 0) {
     warning("No valid genes found in STRING database for provided genes_list.")
     return(list(string_results = data.frame(), string_db = string_db, string_ids = NULL))
@@ -67,7 +77,7 @@ search_string_db <- function(genes_list, species = 9606, network_type = "full", 
     if (k >= 2) {
       subgraph <- adjacency_matrix[neighborhood, neighborhood]
       triangles <- sum(subgraph) / 2
-      clustering_coefficients[i] <- 2 * triangles / (k * (k - 1))
+      clustering_coefficients[i] <- 2 * triangles / (k * (k -1))
     }
   }
 
@@ -110,11 +120,17 @@ search_string_db <- function(genes_list, species = 9606, network_type = "full", 
 #' @param string_ids A list of STRING IDs.
 #' @param file_directory Directory for saving the output plot. Defaults to NULL.
 #' @param export Logical indicating whether to export the plot. Defaults to FALSE.
+#' @return Invisibly returns NULL.
+#' @examples
+#' library(STRINGdb)
+#' string_db <- STRINGdb$new(species = 9606)
+#' string_ids <- c("9606.ENSP00000269305", "9606.ENSP00000357940")
+#' plot_string_network(string_db, string_ids, file_directory = tempdir(), export = FALSE)
 #' @export
 plot_string_network <- function(string_db, string_ids, file_directory = NULL, export = FALSE) {
   if (is.null(string_db) || is.null(string_ids) || length(string_ids) == 0) {
     warning("No valid STRING data available to plot network.")
-    return(NULL)
+    return(invisible(NULL))
   }
 
   current_date <- Sys.Date()
@@ -126,10 +142,12 @@ plot_string_network <- function(string_db, string_ids, file_directory = NULL, ex
     pdf(file = full_network_output_path, width = 12, height = 12)
     string_db$plot_network(string_ids)
     dev.off()
-    print(paste("Network plot exported to:", full_network_output_path))
+    message(paste("Network plot exported to:", full_network_output_path))
   } else {
     string_db$plot_network(string_ids)
   }
+
+  return(invisible(NULL))
 }
 
 #' Plot STRING Interactions
@@ -139,34 +157,28 @@ plot_string_network <- function(string_db, string_ids, file_directory = NULL, ex
 #' @param string_results Data frame with STRING metrics.
 #' @param file_directory Directory for saving the output plot. Defaults to NULL.
 #' @param export Logical indicating whether to export the plot. Defaults to FALSE.
+#' @return Invisibly returns the ggplot object.
+#' @examples
+#' # Example data frame
+#' string_results <- data.frame(Degree = c(10, 5), Clustering_Coefficient_Percent = c(20, 10))
+#' plot_clustering(string_results, file_directory = tempdir(), export = FALSE)
 #' @export
 plot_clustering <- function(string_results, file_directory = NULL, export = FALSE) {
   current_date <- Sys.Date()
   formatted_date <- format(current_date, "%m.%d.%Y")
 
-  log_message <- function(message) {
-    cat(paste0(Sys.time(), ": ", message, "\n"))
-  }
-
-  log_message("Inside plot_clustering function")
-
-  # Check for null or missing columns
-  if (is.null(string_results) || !("Degree" %in% names(string_results)) || !("Clustering_Coefficient_Percent" %in% names(string_results))) {
+  if (is.null(string_results) || !all(c("Degree", "Clustering_Coefficient_Percent") %in% names(string_results))) {
     warning("Essential columns missing in string_results")
-    return(NULL)
+    return(invisible(NULL))
   }
 
-  # Check for empty data frame
   if (nrow(string_results) == 0) {
     warning("No data available for clustering plot.")
-    return(NULL)
+    return(invisible(NULL))
   }
 
   string_results$Degree <- as.numeric(string_results$Degree)
   string_results$Clustering_Coefficient_Percent <- as.numeric(string_results$Clustering_Coefficient_Percent)
-
-  log_message("After conversion - Data types of columns:")
-  print(str(string_results))
 
   plot <- ggplot(string_results, aes(x = Degree, y = Clustering_Coefficient_Percent)) +
     geom_point(color = "black", alpha = 1) +
@@ -192,8 +204,7 @@ plot_clustering <- function(string_results, file_directory = NULL, export = FALS
     png(filename = full_scatter_output_path, width = 1000, height = 800, res = 150)
     print(plot)
     dev.off()
-    print(paste("Full scatter plot file path:", full_scatter_output_path))
-    log_message("Scatter plot saved successfully")
+    message(paste("Scatter plot file path:", full_scatter_output_path))
   } else {
     print(plot)
   }

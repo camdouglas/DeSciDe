@@ -4,11 +4,16 @@ library(DeSciDe)
 test_that("descide function handles minimal input", {
   skip_on_cran()  # Skipping this test on CRAN
 
-  results <- descide(
-    genes_list = c("MYC"),
-    terms_list = c("cancer"),
-    export = FALSE
-  )
+  # Capture messages and warnings
+  captured_messages_warnings <- capture.output({
+    suppressWarnings({
+      results <- descide(
+        genes_list = c("MYC"),
+        terms_list = c("cancer"),
+        export = FALSE
+      )
+    })
+  }, type = "message")
 
   expect_type(results, "list")
   expect_s3_class(results$pubmed_results, "data.frame")
@@ -32,11 +37,16 @@ test_that("descide function handles minimal input", {
 test_that("descide function handles empty input", {
   skip_on_cran()  # Skipping this test on CRAN
 
-  results <- descide(
-    genes_list = character(0),
-    terms_list = character(0),
-    export = FALSE
-  )
+  # Capture messages and warnings
+  captured_messages_warnings <- capture.output({
+    suppressWarnings({
+      results <- descide(
+        genes_list = character(0),
+        terms_list = character(0),
+        export = FALSE
+      )
+    })
+  }, type = "message")
 
   expect_type(results, "list")
   expect_s3_class(results$pubmed_results, "data.frame")

@@ -7,15 +7,20 @@ NULL
 #'
 #' @param genes_list A list of gene IDs.
 #' @param terms_list A list of search terms.
-#' @param threshold_percentage Percentage threshold for ranking (default is 20%).
+#' @param rank_method The method to rank pubmed results, either "weighted" or "total". Weighted ranks results based on order of terms inputted. Total ranks results on total sum of publications across all search term combinations. Defaults to "weighted".
 #' @param species The NCBI taxon ID of the species. Defaults to 9606 (Homo sapiens).
 #' @param network_type The type of string network to use, either "full" or "physical". Defaults to "full".
 #' @param score_threshold The minimum score threshold for string interactions. Defaults to 400.
-#' @param rank_method The method to rank pubmed results, either "weighted" or "total". Weighted ranks results based on order of terms inputed. Total ranks results on total sum of publications across all search term combinations. Defaults to "weighted".
+#' @param threshold_percentage Percentage threshold for ranking (default is 20%).
 #' @param export Logical indicating whether to export the results. Defaults to FALSE.
 #' @param file_directory Directory for saving the output files. Defaults to NULL.
 #' @param export_format Format for export, either "csv", "tsv", or "excel".
 #' @return A list containing the PubMed search results, STRING results, and summary results.
+#' @examples
+#' genes <- c("TP53", "BRCA1")
+#' terms <- c("cancer", "tumor")
+#' results <- descide(genes, terms, export = FALSE)
+#' str(results)
 #' @export
 descide <- function(genes_list, terms_list,
                     rank_method = "weighted",
@@ -28,12 +33,11 @@ descide <- function(genes_list, terms_list,
                     export_format = "csv") {
 
   log_message <- function(message) {
-    cat(paste0(Sys.time(), ": ", message, "\n"))
+    message(paste0(Sys.time(), ": ", message))
   }
 
   log_message("Starting analysis pipeline")
 
-  # Automatically set current_date to the system date and format it
   current_date <- Sys.Date()
   formatted_date <- format(current_date, "%m.%d.%Y")
 
@@ -46,7 +50,7 @@ descide <- function(genes_list, terms_list,
   pubmed_search_results <- search_pubmed(genes_list, terms_list, rank_method)
 
   log_message("PubMed search completed. Results:")
-  print(head(pubmed_search_results))
+  message(head(pubmed_search_results))
 
   # Step 2: Plot heatmap of PubMed search results
   log_message("Plotting heatmap of PubMed search results")
@@ -61,7 +65,7 @@ descide <- function(genes_list, terms_list,
   string_ids <- string_db_results$string_ids
 
   log_message("STRING database search completed. Results:")
-  print(head(string_results))
+  message(head(string_results))
 
   # Step 4: Plot STRING network interactions
   log_message("Plotting STRING network interactions")
@@ -73,8 +77,6 @@ descide <- function(genes_list, terms_list,
 
   # Step 6: Plot degree vs. clustering coefficient
   log_message("Plotting clustering coefficient")
-  print(paste("Data passed to plot_clustering function"))
-  print(str(string_results))
   plot_clustering(string_results, file_directory, export)
 
   # Step 7: Categorize and plot genes
