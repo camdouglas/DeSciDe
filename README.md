@@ -21,6 +21,11 @@ Before installing the `DeSciDe` package, make sure you have `BiocManager` instal
     BiocManager::install("STRINGdb")
     BiocManager::install("ComplexHeatmap")
 
+DeSciDe is available on CRAN, and it can be installed with:
+
+    # Install DeSciDe via CRAN
+    install.packages("DeSciDe")
+
 You can install the development version of DeSciDe from GitHub using the `devtools` package:
 
     # Install devtools if you haven't already
