@@ -87,7 +87,14 @@ search_string_db <- function(genes_list, species = 9606, network_type = "full", 
   components <- components(graph_obj)
 
   gene_symbol_lookup <- setNames(unique_mapped_genes$gene, unique_mapped_genes$STRING_id)
-  nodes_symbols <- sapply(nodes, function(node) ifelse(node %in% names(gene_symbol_lookup), gene_symbol_lookup[node], node))
+  nodes_symbols <- sapply(nodes, function(node) {
+    if(node %in% names(gene_symbol_lookup)) {
+      gene_symbol_lookup[node]
+    } else {
+      # Return the STRING ID instead of NA
+      node
+    }
+  })
 
   string_results <- data.frame(
     Gene_Symbol = nodes_symbols,
@@ -104,7 +111,8 @@ search_string_db <- function(genes_list, species = 9606, network_type = "full", 
     }),
     Connected_Component_id = as.numeric(components$membership),
     Nodes_in_Connected_Component = as.numeric(components$csize[components$membership]),
-    total_number_of_connected_components = components$no
+    total_number_of_connected_components = components$no,
+    row.names = NULL  # Add this line
   )
 
   string_results <- string_results %>%
