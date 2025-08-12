@@ -39,7 +39,11 @@ This package takes a curated list of genes from a user's omics dataset and a lis
 
 The two ranks for each gene are then plotted on a scatter plot to visualize the relationship of the genes' literature precedence and network connectivity. This visual aid can be used to identify highly connected, well-studied genes that serve as high confidence hits clustered around the origin and highly connected, low precedence genes that serve as novel hits clustered in the top left of the graph. The highly connected, low precedence genes are known to interact with the other genes in the list, but have not been studied in the same experimental context, providing novel targets to pursue for follow up studies.
 
-Additional graphical outputs are generated to visualize the STRING network and PubMed results. The package has also been set up to allow the user to change various steps of the analysis to fit their needs, such as searching STRING for all connections or just physical, adjusting the threshold of classification of genes, exporting figures and data tables for use in publications. Below, we highlight how to implement DeSciDe to study an example data set.
+Additional graphical outputs are generated to visualize the STRING network and PubMed results. The package is designed for flexibility, allowing users to customize various steps of the analysis to fit their specific needs. Users can search STRING for all connections or just physical interactions, adjust the threshold for gene classification, and export figures and data tables for use in publications.
+
+We encourage users to be mindful of several limitations of the platform. DeSciDe is intended to help narrow down large omics datasets to guide subsequent experimental investigations, but it does not definitively determine any biological function. Successful use of the platform relies on inputting high-quality gene lists that have undergone appropriate quality control and statistical analysis for the omics platform used. We recommend using datasets of more than 20 and fewer than 500 genes to achieve optimal results.
+
+Below, we provide an example of how to implement DeSciDe in studying an example dataset.
 
 ## Example Usage of DeSciDe
 
@@ -126,6 +130,8 @@ head(results_total$summary_results)
 ```
 
 The more specific and niche the search terms are, the more likely you will want to use weighted. In the example here, "Acidic Patch" is a specific term that does not appear in many publications in combination with the provided gene list. The experiment associated with this dataset was studying mutations to the acidic patch of histone H2A, so as a primary variable in the experiment it is valuable to weight the results to this term, to ensure that the variables of the system (WT or mutants of histone H2A acidic patch) would be represented in DeSciDe's results. Searching by total, however, can provide a good starting place for analysis when a user is not sure what terms to prioritize or does not yet know what precedence there is among their gene list for the terms they include.
+
+The user should be aware that DeSciDe conducts a stringent PubMed search, so the number of publications that are reported using DeSciDe will vary from a default search conducted on the PubMed web interface. Here, we have restricted the search to publication titles and abstracts, which avoids potential false positives from author lists, journal titles, and metadata. We have also limited the search to articles in which only the combination of both the search term and the gene name are found in the title or abstract, eliminating articles that only contain either the search term or the gene name. Last, the PubMed search is strictly limited to the explicit terms provided, so the stemming and related terms that are included in the default PubMed search are excluded. 
 
 ### [Modifications to STRING Search]{.underline}
 
