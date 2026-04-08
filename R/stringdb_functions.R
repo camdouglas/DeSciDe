@@ -132,10 +132,12 @@ search_string_db <- function(genes_list, species = 9606, network_type = "full", 
 #' @param export Logical indicating whether to export the plot. Defaults to FALSE.
 #' @return Invisibly returns NULL.
 #' @examples
+#' \dontrun{
 #' library(STRINGdb)
 #' string_db <- STRINGdb$new(species = 9606)
 #' string_ids <- c("9606.ENSP00000269305", "9606.ENSP00000357940")
 #' plot_string_network(string_db, string_ids, file_directory = tempdir(), export = FALSE)
+#' }
 #' @export
 plot_string_network <- function(string_db, string_ids, file_directory = NULL, export = FALSE) {
   if (is.null(string_db) || is.null(string_ids) || length(string_ids) == 0) {
