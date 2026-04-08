@@ -27,8 +27,10 @@ Invisibly returns NULL.
 Plot STRING network interactions using STRINGdb.
 }
 \examples{
+\dontrun{
 library(STRINGdb)
 string_db <- STRINGdb$new(species = 9606)
 string_ids <- c("9606.ENSP00000269305", "9606.ENSP00000357940")
 plot_string_network(string_db, string_ids, file_directory = tempdir(), export = FALSE)
+}
 }
