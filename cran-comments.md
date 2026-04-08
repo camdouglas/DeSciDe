@@ -4,3 +4,4 @@
 
 ## Changes in this version
 * Updated vignette with requests from reviewers for the `DeSciDe` package.
+* Updated errors with tests on CRAN
